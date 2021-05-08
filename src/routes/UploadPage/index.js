@@ -1,17 +1,25 @@
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { Row, Col, Form, Input, Select, Button } from "antd";
+import { useLocation } from "react-router";
 
 const { Option } = Select;
 
 function UploadPage() {
+  const location = useLocation();
+  const currentUrl = location.pathname;
+  const [isEditing, setEditing] = React.useState(false);
   const onDrop = useCallback((acceptedFiles) => {
     // Do something with the files
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
+  React.useEffect(() => {
+    currentUrl.includes("editpost") ? setEditing(true) : setEditing(false);
+  }, [currentUrl, isEditing]);
+
   return (
-    <Row className="gx-p-4" justify="center">
+    <Row className="gx-p-4 gx-mt-5" justify="center">
       <Col lg={10} md={10} sm={24} xs={24}>
         <div
           style={{
@@ -68,7 +76,7 @@ function UploadPage() {
           </Form.Item>
 
           <Form.Item>
-           <Button type="primary" style={{width:"100%"}}>Publish to Bloom</Button>
+           <Button type="primary" style={{width:"100%"}}>{isEditing ? "Update Post" : "Publish to Bloom"}</Button>
           </Form.Item>
         </Form>
       </Col>

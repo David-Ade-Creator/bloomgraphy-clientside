@@ -1,6 +1,5 @@
-import { Button, Col, Input, Modal, Row } from "antd";
 import React from "react";
-import HeroComponent from "../../components/Hero";
+import { Avatar, Button, Col, Image, Input, Modal, Row } from "antd";
 import data from "./data";
 import { Tabs } from "antd";
 import ListCard from "../../components/ListCard";
@@ -53,9 +52,6 @@ function UserPage() {
                   <p>Porfolio Url</p>
                   <Input />
                 </Col>
-                <Col lg={24} md={24} sm={24} xs={24} className="gx-mb-2">
-                  <Button type="primary">Update</Button>
-                </Col>
               </Row>
             </Col>
           </Row>
@@ -72,8 +68,57 @@ function UserPage() {
               </Row>
             </TabPane>
             <TabPane tab="About" key="2">
-              <Row className="gx-p-5" style={{minHeight:"66.5vh"}}>
+              <Row className="gx-p-3" style={{ minHeight: "66.5vh" }}>
                 <Col lg={14}>
+                  <Row justify="center gx-mb-3">
+                    <Col
+                      lg={20}
+                      md={20}
+                      sm={20}
+                      xs={20}
+                      style={{ textAlign: "center" }}
+                      className="gx-mb-4"
+                    >
+                      {/* <Avatar size={64}
+      src={<Image src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+    /> */}
+                      <Avatar size={64}>D</Avatar>
+                    </Col>
+                    <Col
+                      llg={20}
+                      md={20}
+                      sm={20}
+                      xs={20}
+                      style={{ textAlign: "center" }}
+                      className="gx-mb-4"
+                    >
+                      Photographer Name
+                    </Col>
+                    <Col
+                      lg={20}
+                      md={20}
+                      sm={20}
+                      xs={20}
+                      style={{ textAlign: "center" }}
+                      className="gx-mb-3"
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          width: "100%",
+                        }}
+                      >
+                        <span style={{ textAlign: "center" }}>
+                          64 Shots uploaded
+                        </span>
+                        <Button type="primary" onClick={toggleEdit}>
+                          Edit Profile
+                        </Button>
+                      </div>
+                    </Col>
+                  </Row>
                   <Row justify="center">
                     <Col lg={20}>
                       <h2>Bio</h2>
