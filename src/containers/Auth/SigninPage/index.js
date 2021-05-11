@@ -71,7 +71,6 @@ function Signin() {
         </Col>
         <Col
           lg={8}
-          style={{ backgroundImage: `url('${process.env.PUBLIC_URL}/assets/images/bannerHolder2.jpg')` }}
           className="authbanner"
         >
           <div>

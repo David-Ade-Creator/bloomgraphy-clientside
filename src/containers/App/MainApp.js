@@ -1,7 +1,5 @@
 import React from "react";
 import {Layout} from "antd";
-
-import Sidebar from "../Sidebar/index";
 import HorizontalDefault from "../Topbar/HorizontalDefault/index";
 import HorizontalDark from "../Topbar/HorizontalDark/index";
 import InsideHeader from "../Topbar/InsideHeader/index";

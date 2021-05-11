@@ -16,7 +16,6 @@ const HomePage = () => {
   return (
     <div className="homepage">
       <HeroComponent
-        backgroundphoto={`${process.env.PUBLIC_URL}/assets/images/homepage.jpg`}
         children={
           <div className="hero-child">
             <Row>
