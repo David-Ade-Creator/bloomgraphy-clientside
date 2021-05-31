@@ -118,6 +118,15 @@ const App = () => {
     }
   };
 
+  useEffect(() => {
+    if (location.pathname === "/") {
+      if (initURL === "" || initURL === "/" || initURL === "/signin") {
+        history.push("/home");
+      } else {
+        history.push(initURL);
+      }
+    }
+  }, [authUser, initURL, location, history]);
 
   const currentAppLocale = AppLocale[locale.locale];
 

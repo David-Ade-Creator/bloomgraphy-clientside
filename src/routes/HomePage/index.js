@@ -1,12 +1,24 @@
-import { Button, Col, Modal, Row } from "antd";
+import { Button, Col, Row } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@apollo/react-hooks";
 import HeroComponent from "../../components/Hero";
 import ListCard from "../../components/ListCard";
-import data from "./data";
 import "./style.less";
+import { useSelector } from "react-redux";
+import { FETCH_POSTS_QUERY } from "../../graphql/queries";
 
-const HomePage = () => {
+const HomePage = (props) => {
+  const [posts, setPosts] = React.useState([]);
+
+  const authUser = useSelector(({ auth }) => auth.authUser);
+
+  const { data } = useQuery(FETCH_POSTS_QUERY);
+
+  React.useEffect(() => {
+    if (data) setPosts(data.getPosts);
+  }, [data]);
+
   const [isFilterVisible, setFilterVisible] = React.useState(false);
 
   const toggleFilters = () => {
@@ -32,9 +44,15 @@ const HomePage = () => {
                   professionals.
                 </p>
                 <span>
-                  <Link to="/signup">
-                    <Button type="primary">Sign up</Button>
-                  </Link>
+                  {authUser ? (
+                    <Link to="/upload">
+                      <Button type="primary">Upload</Button>
+                    </Link>
+                  ) : (
+                    <Link to="/signup">
+                      <Button type="primary">Sign up</Button>
+                    </Link>
+                  )}
                 </span>
               </Col>
             </Row>
@@ -42,7 +60,7 @@ const HomePage = () => {
         }
       />
       <Row className="gx-p-4" justify="start" style={{ background: "white" }}>
-        <Col lg={24} className="webfilters">
+        {/* <Col lg={24} className="webfilters">
           <Button>All</Button>
           <Button>Portraits</Button>
           <Button>Photojournalism</Button>
@@ -74,10 +92,10 @@ const HomePage = () => {
         </Col>
             </Row>
           </Modal>
-        </Col>
-        {data.photoList.map((singledata) => {
+        </Col> */}
+        {posts.map((singlePost) => {
           return (
-            <ListCard isHomePage singledata={singledata} key={singledata.id} />
+            <ListCard isHomePage singledata={singlePost} key={singlePost.id} />
           );
         })}
       </Row>

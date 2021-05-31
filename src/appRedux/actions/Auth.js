@@ -1,116 +1,37 @@
+import jwtDecode from "jwt-decode";
 import {
-  FETCH_ERROR,
   FETCH_START,
-  FETCH_SUCCESS,
   INIT_URL,
-  SIGNOUT_USER_SUCCESS, UPDATE_LOAD_USER,
+  SIGNOUT_USER,
   USER_DATA,
-  USER_TOKEN_SET
+  USER_TOKEN_SET,
 } from "../../constants/ActionTypes";
-import axios from 'util/Api'
 
 export const setInitUrl = (url) => {
   return {
     type: INIT_URL,
-    payload: url
+    payload: url,
   };
 };
 
-export const userSignUp = ({email, password, name}) => {
-  console.log(email, password);
+export const userAuthUpdate = (token) => {
   return (dispatch) => {
-    dispatch({type: FETCH_START});
-    axios.post('auth/register', {
-        email: email,
-        password: password,
-        name: name
-      }
-    ).then(({data}) => {
-      console.log("data:", data);
-      if (data.result) {
-        localStorage.setItem("token", data.token.access_token);
-        axios.defaults.headers.common['authorization'] = "Bearer " + data.token.access_token;
-        dispatch({type: FETCH_SUCCESS});
-        dispatch({type: USER_TOKEN_SET, payload: data.token.access_token});
-        dispatch({type: USER_DATA, payload: data.user});
-      } else {
-        console.log("payload: data.error", data.error);
-        dispatch({type: FETCH_ERROR, payload: "Network Error"});
-      }
-    }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.message});
-      console.log("Error****:", error.message);
-    });
-  }
-};
-
-export const userSignIn = ({email, password}) => {
-  return (dispatch) => {
-    dispatch({type: FETCH_START});
-    axios.post('auth/login', {
-        email: email,
-        password: password,
-      }
-    ).then(({data}) => {
-      console.log("userSignIn: ", data);
-      if (data.result) {
-        localStorage.setItem("token", data.token.access_token);
-        axios.defaults.headers.common['Authorization'] = "Bearer " + data.token.access_token;
-        dispatch({type: FETCH_SUCCESS});
-        dispatch({type: USER_TOKEN_SET, payload: data.token.access_token});
-        dispatch(getUser(data.token.access_token));
-      } else {
-        dispatch({type: FETCH_ERROR, payload: data.error});
-      }
-    }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.message});
-      console.log("Error****:", error.message);
-    });
-  }
+    localStorage.setItem("token", token);
+    const decodedToken = jwtDecode(token);
+    if(decodedToken){
+    dispatch({ type: USER_TOKEN_SET, payload: token });
+    dispatch({ type: USER_DATA, payload: decodedToken });
+    }
+  };
 };
 
 export const getUser = (token) => {
-  return (dispatch) => {
-    if (!token) {
-      const token = localStorage.getItem('token');
-    }
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
-
-    dispatch({type: FETCH_START});
-    axios.post('auth/me',
-    ).then(({data}) => {
-      console.log("userSignIn: ", data);
-      if (data.result) {
-        dispatch({type: FETCH_SUCCESS});
-        dispatch({type: USER_DATA, payload: data.user});
-      } else {
-        dispatch({type: FETCH_ERROR, payload: data.error});
-      }
-    }).catch(function (error) {
-      dispatch({type: FETCH_SUCCESS});
-      dispatch({type: UPDATE_LOAD_USER, payload: false});
-      console.log("Error****:", error.message);
-    });
-  }
+  return (dispatch) => {};
 };
 
 export const userSignOut = () => {
-
   return (dispatch) => {
-    dispatch({type: FETCH_START});
-
-    axios.post('auth/logout').then(({data}) => {
-      console.log("log out",data)
-      if (data.result) {
-        localStorage.removeItem("token");
-        dispatch({type: FETCH_SUCCESS});
-        dispatch({type: SIGNOUT_USER_SUCCESS});
-      } else {
-        dispatch({type: FETCH_ERROR, payload: data.error});
-      }
-    }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.message});
-      console.log("Error****:", error.message);
-    });
-  }
+    // localStorage.setItem('token',undefined)
+    dispatch({ type: SIGNOUT_USER });
+  };
 };

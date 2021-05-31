@@ -10,6 +10,7 @@ const INIT_STATE = {
   pathname: '/',
 };
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default (state = INIT_STATE, action) => {
   switch (action.type) {
     case '@@router/LOCATION_CHANGE': {

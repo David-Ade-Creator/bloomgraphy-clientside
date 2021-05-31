@@ -27,6 +27,7 @@ function handleChange(value) {
 
 const AboveHeader = () => {
   const [searchText, setSearchText] = useState("");
+  const authUser = useSelector(({ auth }) => auth.authUser);
 
   const updateSearchChatUser = (evt) => {
     setSearchText(evt.target.value);
@@ -50,7 +51,7 @@ const AboveHeader = () => {
             >
               <h3 style={{ color: "white" }}>Bloomgraphy</h3>
             </Link>
-            <div className="gx-header-search gx-d-none gx-d-lg-flex">
+            {/* <div className="gx-header-search gx-d-none gx-d-lg-flex">
               <SearchBox
                 styleName="gx-lt-icon-search-bar-lg"
                 placeholder="Search in bloomgraphy..."
@@ -65,10 +66,10 @@ const AboveHeader = () => {
               >
                 <Option value="photos">Photos</Option>
               </Select>
-            </div>
+            </div> */}
 
             <ul className="gx-header-notifications gx-ml-auto">
-              <li className="gx-notify gx-notify-search gx-d-inline-block gx-d-lg-none">
+              {/* <li className="gx-notify gx-notify-search gx-d-inline-block gx-d-lg-none">
                 <Popover
                   overlayClassName="gx-popover-horizantal"
                   placement="bottomRight"
@@ -84,7 +85,7 @@ const AboveHeader = () => {
                         placeholder="Search in bloomgraphy..."
                         onChange={updateSearchChatUser}
                         value={searchText}
-                        style={{color:"whites"}}
+                        style={{ color: "whites" }}
                       />
                     </div>
                   }
@@ -94,26 +95,39 @@ const AboveHeader = () => {
                     <i className="icon icon-search-new" />
                   </span>
                 </Popover>
-              </li>
-              <li
-                className=""
-                style={{ color: "orange", fontSize: "15px", cursor: "pointer" }}
-              >
-                <Link to="signin" style={{ color: "orange" }}>
-                  Login
-                </Link>
-              </li>
-              <li
-                className=""
-                style={{ color: "orange", fontSize: "15px", cursor: "pointer" }}
-              >
-                <Link to="signup" style={{ color: "orange" }}>
-                  Signup
-                </Link>
-              </li>
-              <li className="gx-user-nav">
-                <UserInfo />
-              </li>
+              </li> */}
+              {authUser !== null ? (
+                <li className="gx-user-nav">
+                  <UserInfo />
+                </li>
+              ) : (
+                <>
+                  <li
+                    className=""
+                    style={{
+                      color: "orange",
+                      fontSize: "15px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Link to="signin" style={{ color: "orange" }}>
+                      Login
+                    </Link>
+                  </li>
+                  <li
+                    className=""
+                    style={{
+                      color: "orange",
+                      fontSize: "15px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Link to="signup" style={{ color: "orange" }}>
+                      Signup
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </div>
