@@ -1,5 +1,21 @@
 import gql from "graphql-tag";
 
+
+export const GET_USER_PROFILE = gql`
+  query($username: String!) {
+    getProfile(username: $username) {
+      id
+      photo
+      firstName
+      lastName
+      bio
+      location
+      personalWebsite
+      portfolioUrl
+    }
+  }
+`;
+
 export const FETCH_POSTS_QUERY = gql`
 {
   getPosts{

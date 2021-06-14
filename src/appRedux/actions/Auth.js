@@ -1,6 +1,5 @@
 import jwtDecode from "jwt-decode";
 import {
-  FETCH_START,
   INIT_URL,
   SIGNOUT_USER,
   USER_DATA,
@@ -24,6 +23,13 @@ export const userAuthUpdate = (token) => {
     }
   };
 };
+
+export const userUpdate = (data) => {
+  return(dispatch) =>{
+    console.log(data)
+    dispatch({type: USER_DATA, payload: data})
+  }
+}
 
 export const getUser = (token) => {
   return (dispatch) => {};

@@ -5,7 +5,7 @@ import CircularProgress from "components/CircularProgress";
 import ListCard from "../../components/ListCard";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import UserForm from "./form";
-import { FETCH_POSTS_QUERY } from "../../graphql/queries";
+import { FETCH_POSTS_QUERY, GET_USER_PROFILE } from "../../graphql/queries";
 import { useSelector } from "react-redux";
 
 const { TabPane } = Tabs;
@@ -13,7 +13,7 @@ const { TabPane } = Tabs;
 function UserPage(props) {
   const username = props.match.params.username;
   const [userProfile, setUserProfile] = React.useState(undefined);
-  const [userPosts, setUserPosts] = React.useState(null);
+  const [userPosts, setUserPosts] = React.useState(undefined);
   const [isEditOpen, setEdit] = React.useState(false);
 
   const authUser = useSelector(({ auth }) => auth.authUser);
@@ -22,7 +22,7 @@ function UserPage(props) {
     if (authUser == null) {
       props.history.push("/signin");
     }
-  }, [authUser]);
+  }, [authUser, props.history]);
 
   const toggleEdit = () => {
     setEdit(!isEditOpen);
@@ -35,7 +35,7 @@ function UserPage(props) {
   const [updateProfile, { loading: submittingupdate }] = useMutation(
     UPDATE_USER_PROFILE,
     {
-      onCompleted: () => {
+      onCompleted: (data) => {
         message.success("Profile updated");
         setEdit(false);
       },
@@ -53,14 +53,15 @@ function UserPage(props) {
   });
 
   React.useEffect(() => {
-    setUserProfile(userData && userData.getProfile);
+    setUserProfile(userData?.getProfile);
   }, [userData]);
 
   const onFinish = (values) => {
+    // console.log(values)
     updateProfile({ variables: values });
   };
 
-  return !userProfile ? (
+  return !userProfile && !userPosts ? (
     <CircularProgress />
   ) : (
     <Row style={{ background: "white", minHeight: "30vh" }} className="gx-p-5">
@@ -95,14 +96,14 @@ function UserPage(props) {
                     style={{ textAlign: "center" }}
                     className="gx-mb-4"
                   >
-                    {userProfile.photo ? (
+                    {userProfile?.photo ? (
                       <Avatar
                         size={64}
-                        src={<Image src={userProfile.photo} />}
+                        src={<Image src={userProfile?.photo} />}
                       />
                     ) : (
                       <Avatar size={64}>
-                        {userProfile.firstName.substring(0, 2).toUpperCase()}
+                        {userProfile?.firstName.substring(0, 2).toUpperCase()}
                       </Avatar>
                     )}
                   </Col>
@@ -114,7 +115,7 @@ function UserPage(props) {
                     style={{ textAlign: "center" }}
                     className="gx-mb-4"
                   >
-                    {userProfile.firstName + " " + userProfile.lastName}
+                    {userProfile?.firstName + " " + userProfile?.lastName}
                   </Col>
                   <Col
                     lg={20}
@@ -133,8 +134,8 @@ function UserPage(props) {
                       }}
                     >
                       <span style={{ textAlign: "center" }}>
-                        {userPosts.length}{" "}
-                        {userPosts.length > 1 ? "Shots" : "Shot"} uploaded
+                        {userPosts?.length}{" "}
+                        {userPosts?.length > 1 ? "Shots" : "Shot"} uploaded
                       </span>
                       {authUser.username === username && (
                         <Button type="primary" onClick={toggleEdit}>
@@ -148,7 +149,7 @@ function UserPage(props) {
                   <Col lg={20} md={24} sm={24} xs={24}>
                     <h2>Bio</h2>
                     <p>
-                      {userProfile.bio
+                      {userProfile?.bio
                         ? userProfile.bio
                         : "Write something in your bio"}
                     </p>
@@ -157,7 +158,7 @@ function UserPage(props) {
                     <h5>
                       Personal Website :{" "}
                       <strong>
-                        {userProfile.personalWebsite
+                        {userProfile?.personalWebsite
                           ? userProfile.personalWebsite
                           : "Update personal website"}
                       </strong>
@@ -167,7 +168,7 @@ function UserPage(props) {
                     <h5>
                       Portfolio Url :{" "}
                       <strong>
-                        {userProfile.portfolioUrl
+                        {userProfile?.portfolioUrl
                           ? userProfile.portfolioUrl
                           : "Update your portfolio url"}
                       </strong>
@@ -180,7 +181,7 @@ function UserPage(props) {
                   <Col lg={20} md={24} sm={24} xs={24}>
                     <h2>Location</h2>
                     <p>
-                      {userProfile.location
+                      {userProfile?.location
                         ? userProfile.location
                         : "Add your location"}
                     </p>
@@ -202,20 +203,6 @@ function UserPage(props) {
   );
 }
 
-const GET_USER_PROFILE = gql`
-  query($username: String!) {
-    getProfile(username: $username) {
-      id
-      firstName
-      lastName
-      bio
-      location
-      personalWebsite
-      portfolioUrl
-    }
-  }
-`;
-
 const UPDATE_USER_PROFILE = gql`
   mutation(
     $firstName: String!
@@ -224,8 +211,10 @@ const UPDATE_USER_PROFILE = gql`
     $location: String
     $portfolioUrl: String
     $personalWebsite: String
+    $photo: String
   ) {
     editProfile(
+      photo: $photo
       firstName: $firstName
       lastName: $lastName
       bio: $bio

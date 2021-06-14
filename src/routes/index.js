@@ -12,7 +12,6 @@ const App = ({match}) => (
       <Route path={`${match.url}editpost/:postId`} component={asyncComponent(() => import('./UploadPage'))} exact/>
       <Route path={`${match.url}saved`} component={asyncComponent(() => import('./SavedShotPage'))} exact/>
       <Route path={`${match.url}:username`} component={asyncComponent(() => import('./UserPage'))} exact/>
-      <Route path={`${match.url}username/editprofile`} component={asyncComponent(() => import('./EditProfilePage'))} exact/>
     </Switch>
   </div>
 );

@@ -1,5 +1,4 @@
-import React, { useCallback } from "react";
-import { useDropzone } from "react-dropzone";
+import React from "react";
 import { useMutation } from "@apollo/react-hooks";
 import { Row, Col, Form, Input, Select, Button, message, Upload } from "antd";
 import { useHistory, useLocation } from "react-router";
@@ -30,30 +29,9 @@ function UploadPage(props) {
   const [addPhoto] = useMutation(GET_SIGNED_URL, {
     update: (_, data) => {
       console.log(data.data.signS3?.url);
-      setImages([...images, data.data.signS3?.url]);
+      images.push(data.data.signS3?.url);
     },
   });
-
-  const onDrop = useCallback(
-    (acceptedFiles) => {
-      if (acceptedFiles.length === 0) return;
-      if (acceptedFiles.length > 1) {
-        message.warn("cannot upload more than One photo");
-      } else {
-        setUploading(true);
-        acceptedFiles.forEach((file) => {
-          console.log(file.type)
-          addPhoto({ variables: { filename: file.name, filetype: file.type } });
-        });
-        setUploading(false);
-      }
-
-      // Do something with the files
-    },
-    [addPhoto]
-  );
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   React.useEffect(() => {
     currentUrl.includes("editpost") ? setEditing(true) : setEditing(false);
@@ -71,42 +49,46 @@ function UploadPage(props) {
     },
   });
 
+  const uploadSelectedPhotos = (acceptedFiles) => {
+    if (acceptedFiles.length === 0) return;
+    if (acceptedFiles.length > 5) {
+      message.warn("cannot upload more than One photo");
+    } else {
+      setUploading(true);
+      acceptedFiles.forEach((file) => {
+        console.log(file);
+        // addPhoto({ variables: { filename: file.originFileObj.name, filetype: file.originFileObj.type } });
+      });
+      setUploading(false);
+    }
+  };
+
   const onFinish = (values) => addPost({ variables: { ...values, images } });
+
+  const uploadProps = {
+    name: "file",
+    multiple: true,
+    customRequest: {uploadSelectedPhotos},
+    // onChange(info) {
+    //   console.log(info.file);
+    // },
+  };
 
   return !authUser.username ? (
     <CircularProgress />
   ) : (
     <Row className="gx-p-5 gx-mt-5" justify="center">
-      <Col lg={10} md={10} sm={24} xs={24}>
+      <Col lg={10} md={24} sm={24} xs={24}>
+        <Dragger {...uploadProps} showUploadList={false}>
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">
+            Click or drag file to this area to upload
+          </p>
+        </Dragger>
         <div
-          style={{
-            width: "100%",
-            border: "1px dashed",
-            height: "60vh",
-            borderRadius: "5px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            cursor: "pointer",
-            padding: "14px",
-          }}
-          {...getRootProps()}
-        >
-          <input {...getInputProps()} />
-          {isDragActive ? (
-            <p>Drop the files here ...</p>
-          ) : (
-            <div style={{ textAlign: "center" }}>
-              <InboxOutlined style={{ fontSize: "40px" }} />
-
-              <h2>
-                Drag and drop an image Or click to browse to choose a file
-              </h2>
-            </div>
-          )}
-        </div>
-        <div
-          className="gx-mt-3"
+          className="gx-mt-3 gx-mb-5"
           style={{ display: "flex", justifyContent: "start", flexWrap: "wrap" }}
         >
           {images.map((image, i) => (
@@ -130,7 +112,7 @@ function UploadPage(props) {
           ))}
         </div>
       </Col>
-      <Col lg={8} md={8} sm={24} xs={24}>
+      <Col lg={8} md={24} sm={24} xs={24}>
         <Form className="gx-mt-4" layout="vertical" onFinish={onFinish}>
           <Form.Item
             label="Title"
