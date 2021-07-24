@@ -24,3 +24,10 @@ export const CREATE_POST = gql`
     }
   }
 `;
+
+// export const FILES_UPLOAD = gql`
+// mutation($files:[{filename: String!, filetype:String!}]){
+// multipleUpload(files:$files){
+//     signedRequest
+//   }
+// }`;

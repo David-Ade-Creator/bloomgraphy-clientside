@@ -57,7 +57,6 @@ function UserPage(props) {
   }, [userData]);
 
   const onFinish = (values) => {
-    // console.log(values)
     updateProfile({ variables: values });
   };
 

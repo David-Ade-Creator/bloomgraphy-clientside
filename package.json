@@ -14,7 +14,7 @@
     "algoliasearch": "^4.8.5",
     "amcharts3": "^3.21.15",
     "antd": "^4.15.1",
-    "antd-img-crop": "^3.14.2",
+    "antd-img-crop": "^3.14.3",
     "antd-theme-webpack-plugin": "^1.3.7",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
