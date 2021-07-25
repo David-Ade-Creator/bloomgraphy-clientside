@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import { useMutation } from "@apollo/react-hooks";
 import ImgCrop from "antd-img-crop";

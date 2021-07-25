@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import { Button, Checkbox, Col, Form, Input, Row } from "antd";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import IntlMessages from "util/IntlMessages";
@@ -10,10 +11,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { userAuthUpdate } from "../../../appRedux/actions/Auth";
 
 function Signup(props) {
-  const history = useHistory();
   const dispatch = useDispatch();
   const [errors, setErrors] = React.useState({});
   const authUser = useSelector(({ auth }) => auth.authUser);
+  console.log(errors);
 
   React.useEffect(() => {
     if (authUser !== null) {

@@ -1,12 +1,12 @@
 import React from "react";
-import { Avatar, Button, Col, message } from "antd";
+import { Button, Col, message } from "antd";
 import { Link, useHistory } from "react-router-dom";
 import confirm from "antd/lib/modal/confirm";
 import { useSelector } from "react-redux";
 import gql from "graphql-tag";
-import { useMutation, useQuery } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/react-hooks";
 import LikeButton from "../Likebutton";
-import { FETCH_POSTS_QUERY, FETCH_USER_POSTS } from "../../graphql/queries";
+import { FETCH_POSTS_QUERY } from "../../graphql/queries";
 import SaveButton from "../SaveButton";
 
 function ListCard({ singledata, isHomePage }) {

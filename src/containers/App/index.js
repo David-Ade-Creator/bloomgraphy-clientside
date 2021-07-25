@@ -2,7 +2,6 @@ import React, { memo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import URLSearchParams from "url-search-params";
 import {
-  Redirect,
   Route,
   Switch,
   useHistory,
@@ -58,7 +57,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getUser(token));
-  }, [dispatch]);
+  }, [dispatch, token]);
 
   useEffect(() => {
     if (initURL === "") {

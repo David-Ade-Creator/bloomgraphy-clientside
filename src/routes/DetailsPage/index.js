@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
-import { Avatar, Button, Card, Carousel, Col, Row } from "antd";
+import { Avatar, Card, Carousel, Col, Row } from "antd";
 import { Link } from "react-router-dom";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";

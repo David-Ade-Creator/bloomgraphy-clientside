@@ -19,11 +19,6 @@ const HomePage = (props) => {
     if (data) setPosts(data.getPosts);
   }, [data]);
 
-  const [isFilterVisible, setFilterVisible] = React.useState(false);
-
-  const toggleFilters = () => {
-    setFilterVisible(!isFilterVisible);
-  };
 
   return (
     <div className="homepage">

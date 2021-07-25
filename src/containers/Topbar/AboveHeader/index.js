@@ -1,37 +1,15 @@
-import React, { useState } from "react";
-import { Button, Dropdown, Layout, Menu, message, Popover, Select } from "antd";
+import React from "react";
+import { Layout } from "antd";
 import "./style.less";
-
-import SearchBox from "components/SearchBox";
 import UserInfo from "components/UserInfo";
 import { Link } from "react-router-dom";
-import DownOutlined from "@ant-design/icons/lib/icons/DownOutlined";
 import { useSelector } from "react-redux";
 
 const { Header } = Layout;
 
-const Option = Select.Option;
-const menu = (
-  <Menu onClick={handleMenuClick}>
-    <Menu.Item key="photos">Photos</Menu.Item>
-  </Menu>
-);
-
-function handleMenuClick() {
-  message.info("Click on menu item.");
-}
-
-function handleChange(value) {
-  console.log(`selected ${value}`);
-}
 
 const AboveHeader = () => {
-  const [searchText, setSearchText] = useState("");
   const authUser = useSelector(({ auth }) => auth.authUser);
-
-  const updateSearchChatUser = (evt) => {
-    setSearchText(evt.target.value);
-  };
 
   return (
     <div className="header">
