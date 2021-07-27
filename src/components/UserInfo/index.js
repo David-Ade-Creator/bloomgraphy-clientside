@@ -36,7 +36,7 @@ const UserInfo = () => {
       content={userMenuOptions}
       trigger="click"
     >
-      {user ? <Button className="gx-mt-3" type="link" style={{color:"white"}}>{"Hello " + authUser.username}<Tag className="gx-ml-2" color="orange">?</Tag></Button>: ""}
+      {user ? <h5 style={{color:"white",cursor:"pointer"}}>{"Hello " + authUser.username}<Tag className="gx-ml-2" color="orange">?</Tag></h5>: ""}
     </Popover>
   );
 };

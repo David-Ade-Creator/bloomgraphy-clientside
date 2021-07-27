@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
-import { Button, Checkbox, Col, Form, Input, Row } from "antd";
+import { Alert, Button, Checkbox, Col, Form, Input, Row } from "antd";
 import { Link } from "react-router-dom";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
@@ -12,7 +12,7 @@ import { userAuthUpdate } from "../../../appRedux/actions/Auth";
 
 function Signup(props) {
   const dispatch = useDispatch();
-  const [errors, setErrors] = React.useState({});
+  const [errors, setErrors] = React.useState(undefined);
   const authUser = useSelector(({ auth }) => auth.authUser);
   console.log(errors);
 
@@ -27,7 +27,6 @@ function Signup(props) {
       dispatch(userAuthUpdate(result.data.register.token));
     },
     onError: (err) => {
-      console.log(err.graphQLErrors[0].extensions.exception.errors);
       setErrors(err.graphQLErrors[0].extensions.exception.errors);
     },
   });
@@ -69,6 +68,8 @@ function Signup(props) {
                   <div style={{ textAlign: "center", paddingBottom: "20px" }}>
                     Signup to <strong>Bloomgraphy</strong>
                   </div>
+                  {errors?.username && <Alert message={errors?.username} type="error" />}
+                  {errors?.confirmPassword && <Alert message={errors?.confirmPassword} type="error" />}
                   <Form
                     className="gx-signup-form gx-form-row0"
                     onFinish={onFinish}

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
-import { Avatar, Card, Carousel, Col, Row } from "antd";
+import { Avatar, Button, Card, Carousel, Col, Row } from "antd";
 import { Link } from "react-router-dom";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
@@ -45,13 +45,16 @@ function DetailsPage(props) {
                 </Link>
                 <p>
                   Freelancing photographer .{" "}
-                  <span style={{ color: "red" }}>
+                  <span style={{ color: "red",cursor:"pointer" }}>
                     <strong>Hire Me</strong>
                   </span>
                 </p>
               </span>
             </Col>
             <Col lg={12} style={{ textAlign: "right" }}>
+            <span>
+            <Button type="link" className="gx-fs-md gx-pointer gx-mr-3 gx-text-black gx-p-0">Leave a Message</Button>
+              </span>
               <span>
                 <LikeButton post={post} user={authUser} />
               </span>
@@ -64,13 +67,8 @@ function DetailsPage(props) {
                   {post?.images.map((singleImage, i) => (
                     <div key={i}>
                       <img
-                        width="100%"
-                        height="500px"
                         alt="example"
-                        style={{
-                          objectFit: "cover",
-                          objectPosition: "50% 50%",
-                        }}
+                        className="carousel-image"
                         src={singleImage}
                       />
                     </div>
@@ -79,7 +77,7 @@ function DetailsPage(props) {
               </Card>
             </Col>
           </Row>
-          <Row justify="center" className="gx-p-3">
+          <Row justify="center" className="gx-p-3 gx-mb-4">
             <Col lg={24}>{post?.body}</Col>
           </Row>
         </Col>
@@ -93,6 +91,7 @@ function DetailsPage(props) {
             display: "flex",
             justifyContent: "center",
           }}
+          className="gx-pl-4"
         >
           <div className="gx-p-2 feedback">
             <PostList post={post} user={authUser} />

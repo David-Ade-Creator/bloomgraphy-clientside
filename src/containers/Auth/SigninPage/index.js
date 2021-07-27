@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
-import { Button, Checkbox, Col, Form, Input, Row } from "antd";
+import { Alert, Button, Checkbox, Col, Form, Input, Row } from "antd";
 import FormItem from "antd/lib/form/FormItem";
 import { Link } from "react-router-dom";
 import { useMutation } from "@apollo/react-hooks";
@@ -20,18 +20,16 @@ function Signin(props) {
     }
   }, [authUser]);
 
-  const [errors, setErrors] = React.useState({});
+  const [errors, setErrors] = React.useState(undefined);
   const [signInUser, { loading }] = useMutation(SIGNIN_USER, {
     update: (_, result) => {
       dispatch(userAuthUpdate(result.data.login.token));
     },
     onError: (err) => {
-      console.log(err.graphQLErrors[0]?.extensions.exception.errors);
       setErrors(err.graphQLErrors[0]?.extensions.exception.errors);
     },
   });
   const onFinish = (values) => signInUser({ variables: values });
-  console.log(errors);
 
   return (
     <div>
@@ -71,6 +69,7 @@ function Signin(props) {
                     <div style={{ textAlign: "center", paddingBottom: "20px" }}>
                       Signin to <strong>Bloomgraphy</strong>
                     </div>
+                    {errors && <Alert message={errors.general} type="error" />}
                     <FormItem
                       name="username"
                       rules={[

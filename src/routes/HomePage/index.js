@@ -7,20 +7,21 @@ import ListCard from "../../components/ListCard";
 import "./style.less";
 import { useSelector } from "react-redux";
 import { FETCH_POSTS_QUERY } from "../../graphql/queries";
+import CircularProgress from "components/CircularProgress";
 
 const HomePage = (props) => {
-  const [posts, setPosts] = React.useState([]);
+  const [posts, setPosts] = React.useState(null);
 
   const authUser = useSelector(({ auth }) => auth.authUser);
 
-  const { data } = useQuery(FETCH_POSTS_QUERY);
+  const { data, loading } = useQuery(FETCH_POSTS_QUERY);
 
   React.useEffect(() => {
     if (data) setPosts(data.getPosts);
   }, [data]);
 
 
-  return (
+  return !loading && posts !== null ? (
     <div className="homepage">
       <HeroComponent
         children={
@@ -44,8 +45,8 @@ const HomePage = (props) => {
                       <Button type="primary">Upload</Button>
                     </Link>
                   ) : (
-                    <Link to="/signup">
-                      <Button type="primary">Sign up</Button>
+                    <Link to="/signin">
+                      <Button type="primary">Sign in</Button>
                     </Link>
                   )}
                 </span>
@@ -95,6 +96,8 @@ const HomePage = (props) => {
         })}
       </Row>
     </div>
+  ) : (
+    <CircularProgress />
   );
 };
 

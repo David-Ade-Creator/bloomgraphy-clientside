@@ -81,7 +81,7 @@ function ListCard({ singledata, isHomePage }) {
       )}
       {isHomePage && (
         <div
-          className="gx-pt-1"
+          className="gx-pt-1 gx-p-0"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
           <SaveButton post={singledata} user={authUser} />

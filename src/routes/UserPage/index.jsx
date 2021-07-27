@@ -84,7 +84,7 @@ function UserPage(props) {
             </Row>
           </TabPane>
           <TabPane tab="About" key="2">
-            <Row className="gx-p-3" style={{ minHeight: "66.5vh" }}>
+            <Row className="gx-p-3" style={{ minHeight: "66.5vh",display:"flex",justifyContent:"center" }}>
               <Col lg={14}>
                 <Row justify="center gx-mb-3">
                   <Col
@@ -173,10 +173,6 @@ function UserPage(props) {
                       </strong>
                     </h5>
                   </Col>
-                </Row>
-              </Col>
-              <Col lg={10} md={24} sm={24} xs={24} className="gx-mt-3">
-                <Row justify="center">
                   <Col lg={20} md={24} sm={24} xs={24}>
                     <h2>Location</h2>
                     <p>

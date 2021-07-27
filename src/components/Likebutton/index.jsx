@@ -21,7 +21,7 @@ const LikeButton = (props) => {
   const LikeButton = user ? (
     <Button
       type="link"
-      className="gx-fs-sm gx-pointer gx-mr-3 gx-text-grey"
+      className="gx-fs-sm gx-pointer gx-mr-3 gx-text-grey gx-p-0"
       onClick={likePost}
     >
       {liked ? (
@@ -38,7 +38,7 @@ const LikeButton = (props) => {
     </Button>
   ) : (
     <Link to="/signin">
-      <Button type="link" className="gx-fs-sm gx-pointer gx-mr-3 gx-text-grey">
+      <Button type="link" className="gx-fs-sm gx-pointer gx-mr-3 gx-text-grey gx-p-0">
         {liked ? (
           <i
             className="icon icon-like gx-fs-lg gx-mr-2 gx-d-inline-flex gx-vertical-align-middle"

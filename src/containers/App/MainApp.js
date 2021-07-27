@@ -45,9 +45,9 @@ const MainApp = () => {
           className={`gx-layout-content ${getContainerClass(navStyle)} `}
         >
           <App match={match} />
-          <Footer>
+          {/* <Footer>
             <div className="gx-layout-footer-content">{footerText}</div>
-          </Footer>
+          </Footer> */}
         </Content>
       </Layout>
     </Layout>
