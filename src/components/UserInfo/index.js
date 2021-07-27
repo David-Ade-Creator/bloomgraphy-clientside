@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Popover, Tag } from "antd";
+import { Popover, Tag } from "antd";
 import { userSignOut } from "appRedux/actions/Auth";
 import { Link } from "react-router-dom";
 import { useQuery } from "@apollo/client";

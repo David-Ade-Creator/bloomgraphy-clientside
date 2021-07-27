@@ -1,7 +1,6 @@
 import React from "react";
 import { Layout } from "antd";
 import AboveHeader from "../Topbar/AboveHeader/index";
-import { footerText } from "util/config";
 import App from "routes/index";
 import { useSelector } from "react-redux";
 import {
@@ -13,7 +12,7 @@ import {
 } from "../../constants/ThemeSetting";
 import { useRouteMatch } from "react-router-dom";
 
-const { Content, Footer } = Layout;
+const { Content } = Layout;
 
 const MainApp = () => {
   const { navStyle } = useSelector(({ settings }) => settings);
