@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
-import { Avatar, Button, Card, Carousel, Col, Row } from "antd";
+import { Alert, Avatar, Button, Card, Carousel, Col, Row } from "antd";
 import { Link } from "react-router-dom";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
@@ -9,11 +9,17 @@ import "./style.less";
 import LikeButton from "../../components/Likebutton";
 import { useSelector } from "react-redux";
 import CircularProgress from "components/CircularProgress";
+import Modal from "antd/lib/modal/Modal";
 
 function DetailsPage(props) {
   const postId = props.match.params.id;
   const authUser = useSelector(({ auth }) => auth.authUser);
   const [post, setPost] = React.useState(null);
+  const [askBar,setAskBar] = React.useState(false);
+
+  const toggleAskBar=()=>{
+    setAskBar(!askBar)
+  }
 
   React.useEffect(() => {
     if (authUser == null) {
@@ -30,6 +36,13 @@ function DetailsPage(props) {
 
   return !loading && post !== null ? (
     <div style={{ minHeight: "100vh" }}>
+      <Modal visible={askBar} onCancel={toggleAskBar} closable={false} footer={null} zIndex={1000}>
+        <Alert type="warning" message="Make sure to contact photographer before booking a time" />
+        <Button type="primary">Select and Book and appointment with me</Button>
+        <Link to="/chat">
+        <Button type="primary">Let's have a conversation about your service</Button>
+        </Link>
+      </Modal>
       <Row justify="center" className="gx-pt-4 gx-pb-4">
         <Col lg={15} md={24} sm={24} xs={24} style={{ minHeight: "79.7vh" }}>
           <Row className="gx-p-3" justify="space-between">
@@ -43,9 +56,9 @@ function DetailsPage(props) {
                     {post.username}
                   </h4>
                 </Link>
-                <p>
+                <p style={{marginTop:"2rem"}}>
                   Freelancing photographer .{" "}
-                  <span style={{ color: "red",cursor:"pointer" }}>
+                  <span style={{ color: "red",cursor:"pointer" }} onClick={toggleAskBar}>
                     <strong>Hire Me</strong>
                   </span>
                 </p>

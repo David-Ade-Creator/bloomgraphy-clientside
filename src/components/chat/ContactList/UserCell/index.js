@@ -4,8 +4,8 @@ import {Avatar} from "antd";
 const UserCell = ({onSelectUser, selectedSectionId, user}) => {
 
   return (
-    <div className={`gx-chat-user-item ${selectedSectionId === user.id ? 'active' : ''}`} onClick={() => {
-      onSelectUser(user);
+    <div className={`gx-chat-user-item ${selectedSectionId === user.id ? 'active' : ''}`} onClick={(e) => {
+      onSelectUser(e);
     }}>
       <div className="gx-chat-user-row">
         <div className="gx-chat-avatar">
