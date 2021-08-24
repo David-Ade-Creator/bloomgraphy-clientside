@@ -22,7 +22,11 @@ export const FETCH_POSTS_QUERY = gql`
    id
   body
   username
-  images
+  images{
+    uid
+    name
+    url
+  }
   likes{
     id
     username

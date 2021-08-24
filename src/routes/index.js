@@ -1,19 +1,23 @@
 import React from "react";
 import {Route, Switch} from "react-router-dom";
 import ChatPage from "./ChatPage";
-
-import asyncComponent from "util/asyncComponent";
+import HomePage from "./HomePage";
+import DetailsPage from "./DetailsPage";
+import UploadPage from "./UploadPage";
+import SavedShotPage from "./SavedShotPage";
+import UserPage from "./UserPage";
+import EditPage from "./UploadPage/editPost";
 
 const App = ({match}) => (
   <div className="gx-main-content-wrapper gx-p-0">
     <Switch>
-      <Route path={`${match.url}home`} component={asyncComponent(() => import('./HomePage'))} exact/>
+      <Route path={`${match.url}`} component={HomePage} exact/>
       <Route path={`${match.url}chat`} component={ChatPage} exact/>
-      <Route path={`${match.url}shot/:id`} component={asyncComponent(() => import('./DetailsPage'))} exact/>
-      <Route path={`${match.url}upload`} component={asyncComponent(() => import('./UploadPage'))} exact/>
-      <Route path={`${match.url}editpost/:postId`} component={asyncComponent(() => import('./UploadPage'))} exact/>
-      <Route path={`${match.url}saved`} component={asyncComponent(() => import('./SavedShotPage'))} exact/>
-      <Route path={`${match.url}:username`} component={asyncComponent(() => import('./UserPage'))} exact/>
+      <Route path={`${match.url}shot/:id`} component={DetailsPage} exact/>
+      <Route path={`${match.url}upload`} component={UploadPage} exact/>
+      <Route path={`${match.url}editpost/:postId`} component={EditPage} exact/>
+      <Route path={`${match.url}saved`} component={SavedShotPage} exact/>
+      <Route path={`${match.url}:username`} component={UserPage} exact/>
       
     </Switch>
   </div>

@@ -19,14 +19,14 @@ const PostItem = (props) => {
 
   const content = (commentId) => {
     return (
-      <div style={{ width: "100px", height: "auto" }}>
+      <div style={{ width: "100px", height: "auto", borderRadius:"0" }}>
         <span onClick={() => deleteSelectedComment(commentId)} style={{cursor:"pointer"}}>Delete</span>
       </div>
     );
   };
 
   return (
-    <Card className="gx-card">
+    <Card className="gx-card" style={{borderRadius:"0"}}>
      {comment.username === authUser.username && <Popover
         placement="bottomRight"
         content={() => content(comment.id)}

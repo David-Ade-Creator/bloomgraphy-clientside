@@ -45,7 +45,7 @@ const CommentBox = (props) => {
 
   const {user, isLike, date, comment} = commentData;
   return (
-    <div className="gx-media gx-flex-nowrap gx-wall-user-info gx-mb-3">
+    <div className="gx-media gx-flex-nowrap gx-wall-user-info gx-mb-3" style={{borderRadius:"0"}}>
       <Avatar className="gx-mr-3 gx-size-40" src={user.image}/>
       <div className="gx-media-body">
         <h5 className="gx-wall-user-title">{user.name}</h5>

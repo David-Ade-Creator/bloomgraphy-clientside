@@ -55,7 +55,7 @@ function ListCard({ singledata, isHomePage }) {
       <Link to={`/shot/${singledata.id}`}>
         <div style={{ position: "relative" }}>
           <img
-            src={singledata.images[0]}
+            src={singledata.images[0]?.url}
             alt="yes"
             style={{
               width: "100%",
@@ -71,7 +71,7 @@ function ListCard({ singledata, isHomePage }) {
           className="gx-p-1"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Link to={`/editpost/:${singledata.id}`}>
+          <Link to={`/editpost/${singledata.id}`}>
             <Button type="dashed">Edit</Button>
           </Link>
           <Button type="danger" onClick={showDeleteConfirm}>

@@ -1,10 +1,8 @@
 import React, { memo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import URLSearchParams from "url-search-params";
 import {
   Route,
   Switch,
-  useHistory,
   useLocation,
   useRouteMatch,
 } from "react-router-dom";
@@ -15,23 +13,6 @@ import AppLocale from "lngProvider";
 import MainApp from "./MainApp";
 import SignIn from "../Auth/SigninPage";
 import SignUp from "../Auth/SignupPage";
-import { setInitUrl } from "appRedux/actions/Auth";
-import {
-  onLayoutTypeChange,
-  onNavStyleChange,
-  setThemeType,
-} from "appRedux/actions/Setting";
-
-import {
-  LAYOUT_TYPE_BOXED,
-  LAYOUT_TYPE_FRAMED,
-  LAYOUT_TYPE_FULL,
-  NAV_STYLE_ABOVE_HEADER,
-  NAV_STYLE_BELOW_HEADER,
-  NAV_STYLE_DARK_HORIZONTAL,
-  NAV_STYLE_DEFAULT_HORIZONTAL,
-  NAV_STYLE_INSIDE_HEADER_HORIZONTAL,
-} from "../../constants/ThemeSetting";
 import CircularProgress from "../../components/CircularProgress";
 import { getUser } from "../../appRedux/actions";
 
@@ -44,88 +25,19 @@ const RestrictedRoute = ({
 
 const App = () => {
   const dispatch = useDispatch();
-  const { locale, navStyle, layoutType } = useSelector(
+  const { locale } = useSelector(
     ({ settings }) => settings
   );
-  const { token, initURL, loadingAuthUser, authUser } = useSelector(
+  const { token, loadingAuthUser, authUser } = useSelector(
     ({ auth }) => auth
   );
 
   const location = useLocation();
-  const history = useHistory();
   const match = useRouteMatch();
 
   useEffect(() => {
     dispatch(getUser(token));
   }, [dispatch, token]);
-
-  useEffect(() => {
-    if (initURL === "") {
-      dispatch(setInitUrl(location.pathname));
-    }
-    const params = new URLSearchParams(location.search);
-
-    if (params.has("theme")) {
-      dispatch(setThemeType(params.get("theme")));
-    }
-    if (params.has("nav-style")) {
-      dispatch(onNavStyleChange(params.get("nav-style")));
-    }
-    if (params.has("layout-type")) {
-      dispatch(onLayoutTypeChange(params.get("layout-type")));
-    }
-    setLayoutType(layoutType);
-    setNavStyle(navStyle);
-  }, [
-    dispatch,
-    initURL,
-    layoutType,
-    location.pathname,
-    location.search,
-    navStyle,
-  ]);
-
-  const setLayoutType = (layoutType) => {
-    if (layoutType === LAYOUT_TYPE_FULL) {
-      document.body.classList.remove("boxed-layout");
-      document.body.classList.remove("framed-layout");
-      document.body.classList.add("full-layout");
-    } else if (layoutType === LAYOUT_TYPE_BOXED) {
-      document.body.classList.remove("full-layout");
-      document.body.classList.remove("framed-layout");
-      document.body.classList.add("boxed-layout");
-    } else if (layoutType === LAYOUT_TYPE_FRAMED) {
-      document.body.classList.remove("boxed-layout");
-      document.body.classList.remove("full-layout");
-      document.body.classList.add("framed-layout");
-    }
-  };
-
-  const setNavStyle = (navStyle) => {
-    if (
-      navStyle === NAV_STYLE_DEFAULT_HORIZONTAL ||
-      navStyle === NAV_STYLE_DARK_HORIZONTAL ||
-      navStyle === NAV_STYLE_INSIDE_HEADER_HORIZONTAL ||
-      navStyle === NAV_STYLE_ABOVE_HEADER ||
-      navStyle === NAV_STYLE_BELOW_HEADER
-    ) {
-      document.body.classList.add("full-scroll");
-      document.body.classList.add("horizontal-layout");
-    } else {
-      document.body.classList.remove("full-scroll");
-      document.body.classList.remove("horizontal-layout");
-    }
-  };
-
-  useEffect(() => {
-    if (location.pathname === "/") {
-      if (initURL === "" || initURL === "/" || initURL === "/signin") {
-        history.push("/home");
-      } else {
-        history.push(initURL);
-      }
-    }
-  }, [authUser, initURL, location, history]);
 
   const currentAppLocale = AppLocale[locale.locale];
 

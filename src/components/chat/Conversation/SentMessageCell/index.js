@@ -5,8 +5,8 @@ const SentMessageCell = ({conversation}) => {
   return (
     <div className="gx-chat-item gx-flex-row-reverse">
 
-      <Avatar className="gx-size-40 gx-align-self-end" src={"https://via.placeholder.com/150"}
-              alt={conversation.name}/>
+      {/* <Avatar className="gx-size-40 gx-align-self-end" src={"https://via.placeholder.com/150"}
+              alt={conversation.name}/> */}
 
       <div className="gx-bubble-block">
         <div className="gx-bubble">

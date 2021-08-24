@@ -1,18 +1,18 @@
 import React from "react";
 import ChatUserList from "../../components/chat/ChatUserList";
 import CustomScrollbars from "util/CustomScrollbars";
-import Conversation from "components/chat/Conversation/index";
 import "./style.less";
 import users from "./data/chatUsers";
 import conversationList from "./data/conversationList";
 import Avatar from "antd/lib/avatar/avatar";
-import { Button, Drawer, Input, Tabs } from "antd";
-import ContactList from "components/chat/ContactList/index";
+import { Button, Drawer, Input } from "antd";
 import IntlMessages from "util/IntlMessages";
 import CircularProgress from "components/CircularProgress/index";
 import Communication from "./Communication";
 
-const TabPane = Tabs.TabPane;
+// when user click on chat with another user, first add this user already fetched array of user and then fetch the conversation
+// between both users and display this on the communication phase of the application.
+// last seen and last text 
 
 function ChatPage() {
   const [loader, setLoader] = React.useState(false);
@@ -22,70 +22,18 @@ function ChatPage() {
   const [selectedSectionId, setSelectedSectionId] = React.useState("");
   const [selectedTabIndex, setSelectedTabIndex] = React.useState(1);
   const [userState, setUserState] = React.useState(1);
-  const [searchChatUser, setSearchChatUser] = React.useState("");
   const [contactList, setContactList] = React.useState(users);
   const [selectedUser, setSelectedUser] = React.useState(null);
   const [message, setMessage] = React.useState("");
   const [chatUsers, setChatUsers] = React.useState(users);
-//   const [conversationList, setConversationList] = React.useState(users);
   const [conversation, setConversation] = React.useState(null);
 
   const onSelectUser = (user) => {
-      console.log(user)
-    // setLoader(true);
-    // set(user.id);
+    setLoader(true);
+    console.log(user);
     setConversation(conversationListState.find((data) => data.id === user.id));
     setSelectedUser(user);
-    // setLoader(false);
-  };
-
-  const AppUsersInfo = () => {
-    return (
-      <div className="gx-chat-sidenav-main">
-        <div className="gx-bg-grey-light gx-chat-sidenav-header">
-          <div className="gx-chat-user-hd gx-mb-0">
-            <i
-              className="gx-icon-btn icon icon-arrow-left"
-              onClick={() => setUserState(1)}
-            />
-          </div>
-          <div className="gx-chat-user gx-chat-user-center">
-            <div className="gx-chat-avatar gx-mx-auto">
-              <Avatar
-                src={"https://via.placeholder.com/150"}
-                className="gx-size-60"
-                alt="John Doe"
-              />
-            </div>
-
-            <div className="gx-user-name h4 gx-my-2">Robert Johnson</div>
-          </div>
-        </div>
-        <div className="gx-chat-sidenav-content">
-          <CustomScrollbars className="gx-chat-sidenav-scroll">
-            <div className="gx-p-4">
-              <form>
-                <div className="gx-form-group gx-mt-4">
-                  <label>Mood</label>
-
-                  <Input
-                    fullWidth
-                    id="exampleTextarea"
-                    multiline
-                    rows={3}
-                    onKeyUp={(e) => console.log(e)}
-                    onChange={(e) => console.log(e)}
-                    defaultValue="it's a status....not your diary..."
-                    placeholder="Status"
-                    margin="none"
-                  />
-                </div>
-              </form>
-            </div>
-          </CustomScrollbars>
-        </div>
-      </div>
-    );
+    setLoader(false);
   };
 
   const ChatUsers = () => {
@@ -95,7 +43,6 @@ function ChatPage() {
           <div className="gx-chat-user-hd">
             <div
               className="gx-chat-avatar gx-mr-3"
-              onClick={() => setUserState(2)}
             >
               <div className="gx-status-pos">
                 <Avatar
@@ -120,14 +67,7 @@ function ChatPage() {
         </div>
 
         <div className="gx-chat-sidenav-content">
-          {/*<AppBar position="static" className="no-shadow chat-tabs-header">*/}
-          <Tabs className="gx-tabs-half" defaultActiveKey="1">
-            <TabPane
-              label={<IntlMessages id="chat.chatUser" />}
-              tab={<IntlMessages id="chat.chatUser" />}
-              key="1"
-            >
-              <CustomScrollbars className="gx-chat-sidenav-scroll-tab-1">
+           <CustomScrollbars className="gx-chat-sidenav-scroll-tab-2">
                 {chatUsers.length === 0 ? (
                   <div className="gx-p-5">{userNotFound}</div>
                 ) : (
@@ -138,25 +78,6 @@ function ChatPage() {
                   />
                 )}
               </CustomScrollbars>
-            </TabPane>
-            <TabPane
-              label={<IntlMessages id="chat.contacts" />}
-              tab={<IntlMessages id="chat.contacts" />}
-              key="2"
-            >
-              <CustomScrollbars className="gx-chat-sidenav-scroll-tab-2">
-                {contactList.length === 0 ? (
-                  <div className="gx-p-5">{userNotFound}</div>
-                ) : (
-                  <ContactList
-                    contactList={contactList}
-                    selectedSectionId={selectedSectionId}
-                    onSelectUser={(e) => onSelectUser(e)}
-                  />
-                )}
-              </CustomScrollbars>
-            </TabPane>
-          </Tabs>
         </div>
       </div>
     );
@@ -201,11 +122,11 @@ function ChatPage() {
                 visible={drawer}
                 onClose={() => setDrawer(!drawer)}
               >
-                {userState === 1 ? ChatUsers() : AppUsersInfo()}
+                {ChatUsers()}
               </Drawer>
             </div>
             <div className="gx-chat-sidenav gx-d-none gx-d-lg-flex">
-              {userState === 1 ? ChatUsers() : AppUsersInfo()}
+               {ChatUsers()}
             </div>
             {loader ? (
               <div className="gx-loader-view">

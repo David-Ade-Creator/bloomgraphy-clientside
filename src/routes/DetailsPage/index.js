@@ -9,6 +9,7 @@ import "./style.less";
 import LikeButton from "../../components/Likebutton";
 import { useSelector } from "react-redux";
 import CircularProgress from "components/CircularProgress";
+import CustomScrollbars from "util/CustomScrollbars";
 import Modal from "antd/lib/modal/Modal";
 
 function DetailsPage(props) {
@@ -56,7 +57,7 @@ function DetailsPage(props) {
                     {post.username}
                   </h4>
                 </Link>
-                <p style={{marginTop:"2rem"}}>
+                <p style={{marginTop:"1rem"}}>
                   Freelancing photographer .{" "}
                   <span style={{ color: "red",cursor:"pointer" }} onClick={toggleAskBar}>
                     <strong>Hire Me</strong>
@@ -82,7 +83,7 @@ function DetailsPage(props) {
                       <img
                         alt="example"
                         className="carousel-image"
-                        src={singleImage}
+                        src={singleImage.url}
                       />
                     </div>
                   ))}
@@ -107,7 +108,9 @@ function DetailsPage(props) {
           className="gx-pl-4"
         >
           <div className="gx-p-2 feedback">
-            <PostList post={post} user={authUser} />
+          <CustomScrollbars >
+          <PostList post={post} user={authUser} />
+      </CustomScrollbars>   
           </div>
         </Col>
       </Row>
@@ -122,7 +125,11 @@ const FETCH_POST_QUERY = gql`
     getPost(postId: $postId) {
       id
       body
-      images
+      images{
+    uid
+    name
+    url
+  }
       createdAt
       username
       likeCount

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
-import { gql, useLazyQuery, useMutation } from "@apollo/react-hooks";
+import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/react-hooks";
 import ImgCrop from "antd-img-crop";
 import { Row, Col, Form, Input, Select, Button, message, Upload } from "antd";
 import { useHistory, useLocation } from "react-router";
@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 
 const { Option } = Select;
 
-function UploadPage(props) {
+function EditPage(props) {
   const history = useHistory();
   const location = useLocation();
   const currentUrl = location.pathname;
@@ -29,7 +29,7 @@ function UploadPage(props) {
     setPostId(props.match?.params?.postId);
   }, [props]);
 
-  const [fetchPost, { loading: fetchingPost }] = useLazyQuery(
+  const { loading: fetchingPost, data:editData } = useQuery(
     FETCH_POST_QUERY,
     {
       variables: { postId },
@@ -43,12 +43,6 @@ function UploadPage(props) {
   );
 
   const [form] = Form.useForm();
-
-  React.useEffect(() => {
-    if (isEditing && postId) {
-      fetchPost();
-    }
-  }, [isEditing, postId]);
 
   React.useEffect(() => {
     currentUrl.includes("editpost") ? setEditing(true) : setEditing(false);
@@ -102,7 +96,7 @@ function UploadPage(props) {
     }
   };
 
-  return !authUser ? (
+  return !editData ? (
     <CircularProgress />
   ) : (
     <Row className="gx-p-5 gx-mt-5" justify="center">
@@ -198,4 +192,4 @@ const FETCH_POST_QUERY = gql`
   }
 `;
 
-export default UploadPage;
+export default EditPage;

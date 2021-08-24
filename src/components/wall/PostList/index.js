@@ -4,7 +4,6 @@ import WriteBox from "../../../components/wall/WriteBox/index";
 
 const PostList = (props) => {
   const { post, user } = props;
-  console.log(post)
 
   return (
     <>

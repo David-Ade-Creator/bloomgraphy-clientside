@@ -7,7 +7,6 @@ const { TextArea } = Input;
 
 const WriteBox = (props) => {
   const { post, user } = props;
-  console.log(post)
 
   const [commentText, setCommentText] = useState("");
 
@@ -23,7 +22,7 @@ const WriteBox = (props) => {
   };
 
   return (
-    <Card className="gx-card">
+    <Card className="gx-card" style={{borderRadius:"0"}}>
       <div className="gx-media gx-mb-2">
         <Avatar className="gx-size-50 gx-mr-3">DA</Avatar>
         <div className="gx-media-body">

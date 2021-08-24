@@ -13,21 +13,50 @@ export const CREATE_POST = gql`
     $body: String!
     $title: String!
     $type: String!
-    $images: [String]!
+    $images: [ImageInput]
   ) {
     createPost(body: $body, title: $title, type: $type, images: $images) {
       body
       createdAt
       id
-      images
+      images {
+        uid
+        url
+        name
+      }
       username
+      type
+      title
     }
   }
 `;
 
-// export const FILES_UPLOAD = gql`
-// mutation($files:[{filename: String!, filetype:String!}]){
-// multipleUpload(files:$files){
-//     signedRequest
-//   }
-// }`;
+export const EDIT_POST = gql`
+  mutation(
+    $id: ID!
+    $body: String!
+    $title: String!
+    $type: String!
+    $images: [ImageInput]
+  ) {
+    editPost(
+      id: $id
+      body: $body
+      title: $title
+      type: $type
+      images: $images
+    ) {
+      body
+      createdAt
+      id
+      images {
+        uid
+        url
+        name
+      }
+      username
+      type
+      title
+    }
+  }
+`;
