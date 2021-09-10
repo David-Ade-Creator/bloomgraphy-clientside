@@ -1,49 +1,90 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import ChatUserList from "../../components/chat/ChatUserList";
 import CustomScrollbars from "util/CustomScrollbars";
 import "./style.less";
 import users from "./data/chatUsers";
-import conversationList from "./data/conversationList";
 import Avatar from "antd/lib/avatar/avatar";
-import { Button, Drawer, Input } from "antd";
+import { Button, Drawer } from "antd";
 import IntlMessages from "util/IntlMessages";
 import CircularProgress from "components/CircularProgress/index";
 import Communication from "./Communication";
+import { useQuery, useLazyQuery, useMutation } from "@apollo/client";
+import { GET_CHAT_MEMBERS, GET_MESSAGES } from "../../graphql/queries";
+import { SEND_MESSAGE } from "../../graphql/mutations";
 
 // when user click on chat with another user, first add this user already fetched array of user and then fetch the conversation
 // between both users and display this on the communication phase of the application.
-// last seen and last text 
+// last seen and last text
 
-function ChatPage() {
+function ChatPage(props) {
+  const chatRecipient = props.match.params.username;
+  const authUser = useSelector(({ auth }) => auth.authUser);
   const [loader, setLoader] = React.useState(false);
-  const [conversationListState,setConversationList] = React.useState(conversationList);
   const [drawer, setDrawer] = React.useState(false);
-  const [userNotFound, setUserNotFound] = React.useState("No User Found");
-  const [selectedSectionId, setSelectedSectionId] = React.useState("");
-  const [selectedTabIndex, setSelectedTabIndex] = React.useState(1);
-  const [userState, setUserState] = React.useState(1);
-  const [contactList, setContactList] = React.useState(users);
+  const [userNotFound] = React.useState("No User Found");
+  const [selectedSectionUsername, setSelectedSectionUsername] = React.useState();
   const [selectedUser, setSelectedUser] = React.useState(null);
   const [message, setMessage] = React.useState("");
   const [chatUsers, setChatUsers] = React.useState(users);
   const [conversation, setConversation] = React.useState(null);
 
+  const { called:loadUsersCalled,loading:loadingUsers, data: chatMemberwithUsername } = useQuery(GET_CHAT_MEMBERS, {
+    variables: { chatUsername: chatRecipient },
+  });
+
+  const [loadMessages] = useLazyQuery(
+    GET_MESSAGES,
+    {
+      onCompleted: (data) => {
+        setConversation(data?.getMessages);
+        setLoader(false)
+      },
+    }
+  );
+  const [sendUserMessage] = useMutation(
+    SEND_MESSAGE,
+    {
+      onCompleted: (data) => {
+        let message = data?.sendMessage
+        setConversation([...conversation, message])
+        console.log(data?.sendMessage);
+        setMessage("");
+      },
+    }
+  );
+
+  React.useEffect(() => {
+    if (chatRecipient && chatMemberwithUsername) {
+      setChatUsers(chatMemberwithUsername?.getChatUsers);
+    } else {
+      setChatUsers([]);
+    }
+  }, [chatMemberwithUsername, chatRecipient]);
+
   const onSelectUser = (user) => {
     setLoader(true);
-    console.log(user);
-    setConversation(conversationListState.find((data) => data.id === user.id));
+    setSelectedSectionUsername(user.username);
+    loadMessages({ variables: { recipient: user.username } });
     setSelectedUser(user);
-    setLoader(false);
   };
 
+  const handleMessageChange = (e)=>{
+    e.preventDefault();
+    setMessage(e.target.value);
+  }
+
+  const sendMessage = (message)=>{
+    sendUserMessage({variables:{content:message,receiver:selectedSectionUsername}})
+    
+  }
+
   const ChatUsers = () => {
-    return (
+    return loadUsersCalled && loadingUsers ? <CircularProgress /> : (
       <div className="gx-chat-sidenav-main">
         <div className="gx-chat-sidenav-header">
           <div className="gx-chat-user-hd">
-            <div
-              className="gx-chat-avatar gx-mr-3"
-            >
+            <div className="gx-chat-avatar gx-mr-3">
               <div className="gx-status-pos">
                 <Avatar
                   id="avatar-button"
@@ -57,34 +98,33 @@ function ChatPage() {
 
             <div className="gx-module-user-info gx-flex-column gx-justify-content-center">
               <div className="gx-module-title">
-                <h5 className="gx-mb-0">Robert Johnson</h5>
+                <h5 className="gx-mb-0">{authUser.username}</h5>
               </div>
               <div className="gx-module-user-detail">
-                <span className="gx-text-grey gx-link">robert@example.com</span>
+                <span className="gx-text-grey gx-link">{authUser.email}</span>
               </div>
             </div>
           </div>
         </div>
 
         <div className="gx-chat-sidenav-content">
-           <CustomScrollbars className="gx-chat-sidenav-scroll-tab-2">
-                {chatUsers.length === 0 ? (
-                  <div className="gx-p-5">{userNotFound}</div>
-                ) : (
-                  <ChatUserList
-                    chatUsers={chatUsers}
-                    selectedSectionId={selectedSectionId}
-                    onSelectUser={(e) => onSelectUser(e)}
-                  />
-                )}
-              </CustomScrollbars>
+          <CustomScrollbars className="gx-chat-sidenav-scroll-tab-2">
+            {chatUsers.length === 0 ? (
+              <div className="gx-p-5">{userNotFound}</div>
+            ) : (
+              <ChatUserList
+                chatUsers={chatUsers}
+                selectedSectionUsername={selectedSectionUsername}
+                onSelectUser={(e) => onSelectUser(e)}
+              />
+            )}
+          </CustomScrollbars>
         </div>
       </div>
     );
   };
 
   const showCommunication = () => {
-      
     return (
       <div className="gx-chat-box">
         {selectedUser === null ? (
@@ -104,7 +144,16 @@ function ChatPage() {
             </Button>
           </div>
         ) : (
-          <Communication User={selectedUser} message={message} conversation={conversation} toggleDrawer={()=>{setDrawer(!drawer)}}/>
+          <Communication
+            User={selectedUser}
+            message={message}
+            sendMessage={sendMessage}
+            handleMessageChange={handleMessageChange}
+            conversation={conversation}
+            toggleDrawer={() => {
+              setDrawer(!drawer);
+            }}
+          />
         )}
       </div>
     );
@@ -126,7 +175,7 @@ function ChatPage() {
               </Drawer>
             </div>
             <div className="gx-chat-sidenav gx-d-none gx-d-lg-flex">
-               {ChatUsers()}
+              {ChatUsers()}
             </div>
             {loader ? (
               <div className="gx-loader-view">

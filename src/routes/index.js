@@ -12,7 +12,7 @@ const App = ({match}) => (
   <div className="gx-main-content-wrapper gx-p-0">
     <Switch>
       <Route path={`${match.url}`} component={HomePage} exact/>
-      <Route path={`${match.url}chat`} component={ChatPage} exact/>
+      <Route path={`${match.url}chat/:username`} component={ChatPage} exact/>
       <Route path={`${match.url}shot/:id`} component={DetailsPage} exact/>
       <Route path={`${match.url}upload`} component={UploadPage} exact/>
       <Route path={`${match.url}editpost/:postId`} component={EditPage} exact/>

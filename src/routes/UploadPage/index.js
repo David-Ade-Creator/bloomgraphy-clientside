@@ -29,7 +29,7 @@ function UploadPage(props) {
     setPostId(props.match?.params?.postId);
   }, [props]);
 
-  const [fetchPost, { loading: fetchingPost }] = useLazyQuery(
+  const [fetchPost] = useLazyQuery(
     FETCH_POST_QUERY,
     {
       variables: { postId },

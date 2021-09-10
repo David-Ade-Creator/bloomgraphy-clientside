@@ -60,3 +60,14 @@ export const EDIT_POST = gql`
     }
   }
 `;
+
+
+export const SEND_MESSAGE = gql`
+mutation($content:String!,$receiver:String!){
+  sendMessage(content:$content, receiver:$receiver){
+    id
+    receiver
+    sender
+    content
+  }
+  }`;

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
-import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/react-hooks";
+import { gql, useMutation, useQuery } from "@apollo/react-hooks";
 import ImgCrop from "antd-img-crop";
 import { Row, Col, Form, Input, Select, Button, message, Upload } from "antd";
 import { useHistory, useLocation } from "react-router";
@@ -29,7 +29,7 @@ function EditPage(props) {
     setPostId(props.match?.params?.postId);
   }, [props]);
 
-  const { loading: fetchingPost, data:editData } = useQuery(
+  const { data:editData } = useQuery(
     FETCH_POST_QUERY,
     {
       variables: { postId },

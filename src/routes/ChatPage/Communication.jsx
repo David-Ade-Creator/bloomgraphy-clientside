@@ -5,10 +5,7 @@ import Avatar from 'antd/lib/avatar/avatar';
 
 
 const Communication = (props) => {
-    const {message, selectedUser, conversation, toggleDrawer} = props;
-
-
-    console.log(selectedUser?.thumb);
+    const {message, selectedUser, conversation, toggleDrawer,handleMessageChange,sendMessage} = props;
 
     return <div className="gx-chat-main">
       <div className="gx-chat-main-header">
@@ -21,19 +18,19 @@ const Communication = (props) => {
                       className="gx-rounded-circle gx-size-60"
                       alt=""/>
 
-              <span className={`gx-status gx-${selectedUser?.status}`}/>
+              <span className={`gx-status gx-${selectedUser?.username}`}/>
             </div>
           </div>
 
           <div className="gx-chat-contact-name">
-            {selectedUser?.name}
+            {selectedUser?.username}
           </div>
         </div>
 
       </div>
 
       <CustomScrollbars className="gx-chat-list-scroll">
-        <Conversation conversationData={conversation.conversationData}
+        <Conversation conversationData={conversation}
                       selectedUser={selectedUser}/>
       </CustomScrollbars>
 
@@ -43,14 +40,13 @@ const Communication = (props) => {
             <div className="gx-form-group">
                             <textarea
                               id="required" className="gx-border-0 ant-input gx-chat-textarea"
-                              onKeyUp={(e)=>{console.log(e)}}
-                              onChange={(e)=>{console.log(e)}}
+                              onChange={(e)=>{handleMessageChange(e)}}
                               value={message}
                               placeholder="Type and hit enter to send message"
                             />
             </div>
           </div>
-          <i className="gx-icon-btn icon icon-sent" onClick={(e)=>{console.log(e)}}/>
+          <i className="gx-icon-btn icon icon-sent" onClick={()=>sendMessage(message)}/>
         </div>
       </div>
     </div>

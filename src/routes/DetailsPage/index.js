@@ -40,7 +40,7 @@ function DetailsPage(props) {
       <Modal visible={askBar} onCancel={toggleAskBar} closable={false} footer={null} zIndex={1000}>
         <Alert type="warning" message="Make sure to contact photographer before booking a time" />
         <Button type="primary">Select and Book and appointment with me</Button>
-        <Link to="/chat">
+        <Link to={`/chat/${post.username}`}>
         <Button type="primary">Let's have a conversation about your service</Button>
         </Link>
       </Modal>
@@ -59,9 +59,9 @@ function DetailsPage(props) {
                 </Link>
                 <p style={{marginTop:"1rem"}}>
                   Freelancing photographer .{" "}
-                  <span style={{ color: "red",cursor:"pointer" }} onClick={toggleAskBar}>
+                  {authUser.username !== post.username && <span style={{ color: "red",cursor:"pointer" }} onClick={toggleAskBar}>
                     <strong>Hire Me</strong>
-                  </span>
+                  </span>}
                 </p>
               </span>
             </Col>

@@ -39,8 +39,8 @@ export const FETCH_POSTS_QUERY = gql`
 
 
 export const FETCH_USER_POSTS = gql`
-  query {
-    getUserPost(username: "stan__dave") {
+  query($username: String!) {
+    getUserPost(username: $username) {
       id
       body
       createdAt
@@ -59,3 +59,25 @@ export const FETCH_USER_POSTS = gql`
     }
   }
 `;
+
+export const GET_CHAT_MEMBERS = gql`
+query($chatUsername: String!){
+     getChatUsers(chatUsername:$chatUsername){
+       id
+       username
+       firstName
+       lastName
+       lastmessage
+     }
+   }`;
+
+export const GET_MESSAGES = gql`
+query($recipient:String!){
+  getMessages(recipient:$recipient){
+    id
+    content
+    createdAt
+    sender
+    receiver
+  }
+}`;
