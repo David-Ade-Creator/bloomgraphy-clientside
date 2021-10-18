@@ -14,7 +14,7 @@ const MainApp = () => {
       <Layout>
         <AboveHeader />
         <Content className={`gx-layout-content`}>
-          {/* this is coming from the index page in routes folder, used to identify present route url and nivigate to route */}
+          {/* this is coming from the index page in routes folder, used to identify present route url and navigate to route */}
           <App match={match} />
         </Content>
       </Layout>
