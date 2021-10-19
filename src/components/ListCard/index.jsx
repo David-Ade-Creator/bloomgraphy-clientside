@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Col, message } from "antd";
+import {ExclamationCircleOutlined} from "@ant-design/icons"
 import { Link, useHistory } from "react-router-dom";
 import confirm from "antd/lib/modal/confirm";
 import { useSelector } from "react-redux";
@@ -9,16 +10,18 @@ import LikeButton from "../Likebutton";
 import { FETCH_POSTS_QUERY } from "../../graphql/queries";
 import SaveButton from "../SaveButton";
 
-function ListCard({ singledata, isHomePage }) {
+function ListCard({ singledata, isHomePage, recallQuery }) {
   const history = useHistory();
   const authUser = useSelector(({ auth }) => auth.authUser);
 
   const [deletePost] = useMutation(DELETE_POST_QUERY, {
     update: async (proxy) => {
+      await recallQuery()
       const data = await proxy.readQuery({
         query: FETCH_POSTS_QUERY,
       });
       data.getPosts = data?.getPosts.filter((p) => p.id !== singledata.id);
+      console.log(data.getPosts);
       proxy.writeQuery({ query: FETCH_POSTS_QUERY, data });
       message.success("post deleted");
       history.push(`/${singledata.username}`);
@@ -28,8 +31,7 @@ function ListCard({ singledata, isHomePage }) {
   function showDeleteConfirm() {
     confirm({
       title: "Are you sure you want to delete this post?",
-      // icon: <ExclamationCircleOutlined />,
-      content: "Some descriptions",
+      icon: <ExclamationCircleOutlined />,
       okText: "Yes",
       okType: "danger",
       cancelText: "No",

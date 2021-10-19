@@ -14,7 +14,7 @@ const HomePage = (props) => {
 
   const authUser = useSelector(({ auth }) => auth.authUser);
 
-  const { data, loading } = useQuery(FETCH_POSTS_QUERY);
+  const { data, loading } = useQuery(FETCH_POSTS_QUERY,{fetchPolicy: "network-only"});
 
   React.useEffect(() => {
     if (data) setPosts(data.getPosts);

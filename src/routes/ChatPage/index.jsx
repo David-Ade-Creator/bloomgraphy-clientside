@@ -36,6 +36,7 @@ function ChatPage(props) {
   const [loadMessages] = useLazyQuery(
     GET_MESSAGES,
     {
+      fetchPolicy: "network-only",
       onCompleted: (data) => {
         setConversation(data?.getMessages);
         setLoader(false)

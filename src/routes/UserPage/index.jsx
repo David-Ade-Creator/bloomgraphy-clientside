@@ -3,7 +3,7 @@ import { Avatar, Button, Col, Image, message, Row } from "antd";
 import { Tabs } from "antd";
 import CircularProgress from "components/CircularProgress";
 import ListCard from "../../components/ListCard";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import UserForm from "./form";
 import { FETCH_POSTS_QUERY, GET_USER_PROFILE } from "../../graphql/queries";
 import { useSelector } from "react-redux";
@@ -29,6 +29,7 @@ function UserPage(props) {
   };
 
   const { data: userData } = useQuery(GET_USER_PROFILE, {
+    fetchPolicy: "network-only",
     variables: { username },
   });
 
@@ -43,6 +44,18 @@ function UserPage(props) {
   );
 
   const { data: postDatas } = useQuery(FETCH_POSTS_QUERY, {
+    fetchPolicy: "network-only",
+    variables: { username },
+    onCompleted: () => {
+      const requiredPost = postDatas?.getPosts?.filter(
+        (post) => post.username === username
+      );
+      setUserPosts(requiredPost);
+    },
+  });
+
+  const [updateCallAfterDelete] = useLazyQuery(FETCH_POSTS_QUERY, {
+    fetchPolicy: "network-only",
     variables: { username },
     onCompleted: () => {
       const requiredPost = postDatas?.getPosts?.filter(
@@ -64,7 +77,7 @@ function UserPage(props) {
     <CircularProgress />
   ) : (
     <Row style={{ background: "white", minHeight: "30vh" }} className="gx-p-5">
-      <Col lg={24}>
+      <Col lg={24} md={24} sm={24} xs={24}>
         <Tabs defaultActiveKey="1">
           <TabPane tab="Shots" key="1">
             <Row style={{ minHeight: "66vh" }}>
@@ -75,16 +88,36 @@ function UserPage(props) {
                       singledata={singledata}
                       key={i}
                       toggleEdit={toggleEdit}
+                      recallQuery={updateCallAfterDelete}
                     />
                   );
                 })
               ) : (
-                <>No Posts</>
+                <Col
+                  lg={24}
+                  md={24}
+                  sm={24}
+                  xs={24}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  No Posts
+                </Col>
               )}
             </Row>
           </TabPane>
           <TabPane tab="About" key="2">
-            <Row className="gx-p-3" style={{ minHeight: "66.5vh",display:"flex",justifyContent:"center" }}>
+            <Row
+              className="gx-p-3"
+              style={{
+                minHeight: "66.5vh",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
               <Col lg={14}>
                 <Row justify="center gx-mb-3">
                   <Col

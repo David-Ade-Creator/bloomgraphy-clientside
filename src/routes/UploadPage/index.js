@@ -1,71 +1,37 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
-import { gql, useLazyQuery, useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/react-hooks";
 import ImgCrop from "antd-img-crop";
 import { Row, Col, Form, Input, Select, Button, message, Upload } from "antd";
-import { useHistory, useLocation } from "react-router";
+import { useHistory } from "react-router";
 import CircularProgress from "components/CircularProgress";
-import { CREATE_POST, EDIT_POST } from "../../graphql/mutations";
+import { CREATE_POST } from "../../graphql/mutations";
 import { useSelector } from "react-redux";
 
 const { Option } = Select;
 
 function UploadPage(props) {
   const history = useHistory();
-  const location = useLocation();
-  const currentUrl = location.pathname;
-  const [postId, setPostId] = React.useState(props.match?.params?.postId);
   const [fileList, setFileList] = React.useState([]);
-  const [isEditing, setEditing] = React.useState(false);
   const authUser = useSelector(({ auth }) => auth.authUser);
 
-  console.log(fileList);
   React.useEffect(() => {
     if (authUser == null) {
       props.history.push("/signin");
     }
-  }, [authUser]);
-  React.useEffect(() => {
-    setPostId(props.match?.params?.postId);
-  }, [props]);
+  },[])
 
-  const [fetchPost] = useLazyQuery(
-    FETCH_POST_QUERY,
-    {
-      variables: { postId },
-      onCompleted: (data) => {
-        setFileList(data.getPost?.images);
-        form.setFieldsValue({ title: data.getPost?.title });
-        form.setFieldsValue({ type: data.getPost?.type });
-        form.setFieldsValue({ body: data.getPost?.body });
-      },
-    }
-  );
 
   const [form] = Form.useForm();
 
-  React.useEffect(() => {
-    if (isEditing && postId) {
-      fetchPost();
-    }
-  }, [isEditing, postId]);
-
-  React.useEffect(() => {
-    currentUrl.includes("editpost") ? setEditing(true) : setEditing(false);
-  }, [currentUrl, isEditing]);
 
   const [addPost, { loading: addPostLoading }] = useMutation(CREATE_POST, {
     onCompleted: () => {
       message.success("New Post added");
-      history.push("/home");
+      history.push("/");
     },
   });
 
-  const [editPost, { loading: editPostLoading }] = useMutation(EDIT_POST, {
-    onCompleted: () => {
-      message.success("Post updated");
-    },
-  });
 
   const onPreview = async (file) => {
     let src = file.url;
@@ -95,11 +61,9 @@ function UploadPage(props) {
       singleImage.name = file.name;
       images = [...images, singleImage];
     });
-    if (isEditing) {
-      editPost({ variables: { id: postId, ...values, images } });
-    } else {
+   
       addPost({ variables: { ...values, images } });
-    }
+
   };
 
   return !authUser ? (
@@ -167,13 +131,10 @@ function UploadPage(props) {
               type="primary"
               style={{ width: "100%" }}
               htmlType="submit"
-              loading={addPostLoading || editPostLoading}
+              loading={addPostLoading}
             >
-              {isEditing && !addPostLoading
-                ? "Update Post"
-                : "Publish to Bloom"}
+              {!addPostLoading && "Publish to Bloom"}
               {addPostLoading && "Posting..."}
-              {editPostLoading && "Updating post..."}
             </Button>
           </Form.Item>
         </Form>
@@ -181,21 +142,5 @@ function UploadPage(props) {
     </Row>
   );
 }
-
-const FETCH_POST_QUERY = gql`
-  query($postId: ID!) {
-    getPost(postId: $postId) {
-      id
-      body
-      images {
-        uid
-        name
-        url
-      }
-      type
-      title
-    }
-  }
-`;
 
 export default UploadPage;

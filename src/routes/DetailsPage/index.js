@@ -36,7 +36,7 @@ function DetailsPage(props) {
   }, [data, loading]);
 
   return !loading && post !== null ? (
-    <div style={{ minHeight: "100vh" }}>
+    <div>
       <Modal visible={askBar} onCancel={toggleAskBar} closable={false} footer={null} zIndex={1000}>
         <Alert type="warning" message="Make sure to contact photographer before booking a time" />
         <Button type="primary">Select and Book and appointment with me</Button>
@@ -45,7 +45,7 @@ function DetailsPage(props) {
         </Link>
       </Modal>
       <Row justify="center" className="gx-pt-4 gx-pb-4">
-        <Col lg={15} md={24} sm={24} xs={24} style={{ minHeight: "79.7vh" }}>
+        <Col lg={15} md={24} sm={24} xs={24}>
           <Row className="gx-p-3" justify="space-between">
             <Col lg={12} md={24} sm={24} xs={24}>
               <span>
