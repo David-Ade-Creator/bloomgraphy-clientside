@@ -9,9 +9,10 @@ import { Button, Drawer } from "antd";
 import IntlMessages from "util/IntlMessages";
 import CircularProgress from "components/CircularProgress/index";
 import Communication from "./Communication";
-import { useQuery, useLazyQuery, useMutation } from "@apollo/client";
+import { useQuery, useLazyQuery, useMutation, useSubscription } from "@apollo/client";
 import { GET_CHAT_MEMBERS, GET_MESSAGES } from "../../graphql/queries";
 import { SEND_MESSAGE } from "../../graphql/mutations";
+import { NEW_MESSAGE } from "../../graphql/subscription";
 
 // when user click on chat with another user, first add this user already fetched array of user and then fetch the conversation
 // between both users and display this on the communication phase of the application.
@@ -33,6 +34,19 @@ function ChatPage(props) {
     variables: { chatUsername: chatRecipient },
   });
 
+  const { data: messageData, error: messageError } = useSubscription(NEW_MESSAGE)
+
+  React.useEffect(() => {
+    if (messageError) console.log(messageError)
+
+    if(messageData?.newMessage){
+    if(messageData?.newMessage.sender === selectedUser || messageData?.newMessage.receiver === authUser?.username){
+      setConversation([...conversation,messageData?.newMessage])
+    }
+  }
+
+  },[ messageError, messageData?.newMessage, selectedUser]);
+
   const [loadMessages] = useLazyQuery(
     GET_MESSAGES,
     {
@@ -49,7 +63,6 @@ function ChatPage(props) {
       onCompleted: (data) => {
         let message = data?.sendMessage
         setConversation([...conversation, message])
-        console.log(data?.sendMessage);
         setMessage("");
       },
     }
@@ -77,7 +90,6 @@ function ChatPage(props) {
 
   const sendMessage = (message)=>{
     sendUserMessage({variables:{content:message,receiver:selectedSectionUsername}})
-    
   }
 
   const ChatUsers = () => {

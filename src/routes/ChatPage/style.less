@@ -1,8 +1,16 @@
 .container{
-    margin: 3rem 5rem;
+    margin: 3rem 7rem;
     height: 70vh;
     display: flex;
     flex-direction: row;
+
+    @media (max-width:765px) {
+        margin: 1.7rem 2rem;
+      }
+
+      @media (max-width:450px) {
+        margin: 1.4rem 1rem;
+      }
 
     .usercontainer{
         flex-basis: 30%;

@@ -29,7 +29,7 @@ const Communication = (props) => {
 
       </div>
 
-      <CustomScrollbars className="gx-chat-list-scroll">
+      <CustomScrollbars className="gx-chat-list-scroll"scrollToBottom={true} message={conversation}>
         <Conversation conversationData={conversation}
                       selectedUser={selectedUser}/>
       </CustomScrollbars>
