@@ -12,8 +12,8 @@ import { WebSocketLink } from '@apollo/client/link/ws'
 import { getMainDefinition } from '@apollo/client/utilities';
 
 let httpLink = createHttpLink({
-  uri: "https://bloomgraphy.herokuapp.com",
-  // uri: "http://localhost:5000",
+  // uri: "https://bloomgraphy.herokuapp.com",
+  uri: "http://localhost:5000",
 });
 
 const authLink = setContext(() => {
@@ -28,8 +28,8 @@ const authLink = setContext(() => {
 httpLink = authLink.concat(httpLink)
 
 const wsLink = new WebSocketLink({
-  // uri: `ws://localhost:5000/graphql`,
-  uri: `ws://https://bloomgraphy.herokuapp.com/graphql`,
+  uri: `ws://localhost:5000/graphql`,
+  // uri: `ws://https://bloomgraphy.herokuapp.com`,
   options: {
     reconnect: true,
     connectionParams: {

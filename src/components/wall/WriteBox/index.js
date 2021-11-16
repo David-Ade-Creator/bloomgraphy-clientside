@@ -2,12 +2,25 @@ import React, { useState } from "react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import { Avatar, Button, Card, Divider, Input } from "antd";
+import { GET_USER_PROFILE } from "../../../graphql/queries";
+import { useSelector } from "react-redux";
+import { useQuery } from "@apollo/react-hooks";
 
 const { TextArea } = Input;
 
 const WriteBox = (props) => {
-  const { post, user } = props;
-
+  const { post} = props;
+  const authUser = useSelector(({ auth }) => auth.authUser);
+  const [userDetails, setUserDetails] = React.useState(undefined);
+  const { data: userData } = useQuery(GET_USER_PROFILE, {
+    fetchPolicy: "network-only",
+    variables: { username : authUser.username },
+    onCompleted:()=>{
+      setUserDetails(userData?.getProfile);
+    }
+  });
+  console.log(userDetails)
+ 
   const [commentText, setCommentText] = useState("");
 
   const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION, {
@@ -24,7 +37,8 @@ const WriteBox = (props) => {
   return (
     <Card className="gx-card" style={{borderRadius:"0"}}>
       <div className="gx-media gx-mb-2">
-        <Avatar className="gx-size-50 gx-mr-3">DA</Avatar>
+        {userDetails && userDetails.photo ? <Avatar className="gx-size-50 gx-mr-3" src={userDetails?.photo} /> : <Avatar className="gx-size-50 gx-mr-3">{userDetails?.username?.substring(0,2).toUpperCase()}</Avatar> }
+        
         <div className="gx-media-body">
           <TextArea
             className="gx-border-0"
@@ -47,7 +61,7 @@ const WriteBox = (props) => {
           size="small"
           className="gx-ml-auto gx-mb-0"
           onClick={submitComment}
-          disabled={!user}
+          disabled={!userDetails}
         >
           SEND
         </Button>

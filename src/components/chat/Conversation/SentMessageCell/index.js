@@ -2,7 +2,7 @@ import React from "react";
 
 const SentMessageCell = ({conversation}) => {
   return (
-    <div className="gx-chat-item gx-flex-row-reverse">
+    <div className="gx-chat-item gx-flex-row-reverse gx-pr-2">
 
       <div className="gx-bubble-block">
         <div className="gx-bubble">

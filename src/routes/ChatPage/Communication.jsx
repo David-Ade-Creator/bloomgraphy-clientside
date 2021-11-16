@@ -6,7 +6,6 @@ import Avatar from 'antd/lib/avatar/avatar';
 
 const Communication = (props) => {
     const {message, selectedUser, conversation, toggleDrawer,handleMessageChange,sendMessage} = props;
-
     return <div className="gx-chat-main">
       <div className="gx-chat-main-header">
         <span className="gx-d-block gx-d-lg-none gx-chat-btn"><i className="gx-icon-btn icon icon-chat" onClick={toggleDrawer}/></span>
@@ -14,28 +13,28 @@ const Communication = (props) => {
 
           <div className="gx-chat-avatar gx-mr-2">
             <div className="gx-status-pos">
-              <Avatar src={selectedUser?.thumb}
-                      className="gx-rounded-circle gx-size-60"
-                      alt=""/>
-
-              <span className={`gx-status gx-${selectedUser?.username}`}/>
+              {selectedUser?.photo ? <Avatar src={selectedUser?.photo}
+                      className="gx-rounded-circle gx-size-40"
+                      alt=""/> : <Avatar 
+                      className="gx-rounded-circle gx-size-40"
+                     >{selectedUser?.firstName.substring(0,2).toUpperCase()}</Avatar>}
             </div>
           </div>
 
-          <div className="gx-chat-contact-name">
-            {selectedUser?.username}
+          <div className="gx-chat-contact-name" style={{fontSize:"1rem"}}>
+            {selectedUser?.firstName + " " + selectedUser?.lastName}
           </div>
         </div>
 
       </div>
 
-      <CustomScrollbars className="gx-chat-list-scroll"scrollToBottom={true} message={conversation}>
+      <CustomScrollbars className="gx-chat-list-scroll" scrolltobottom="true" message={conversation}>
         <Conversation conversationData={conversation}
                       selectedUser={selectedUser}/>
       </CustomScrollbars>
 
       <div className="gx-chat-main-footer">
-        <div className="gx-flex-row gx-align-items-center" style={{maxHeight: 51}}>
+        <div className="gx-flex-row gx-align-items-center">
           <div className="gx-col">
             <div className="gx-form-group">
                             <textarea

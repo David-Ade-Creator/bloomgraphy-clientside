@@ -1,36 +1,29 @@
 import React from "react";
 import { Button, Col, message } from "antd";
-import {ExclamationCircleOutlined} from "@ant-design/icons"
+import {ExclamationCircleOutlined} from "@ant-design/icons";
 import { Link, useHistory } from "react-router-dom";
 import confirm from "antd/lib/modal/confirm";
 import { useSelector } from "react-redux";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import LikeButton from "../Likebutton";
-import { FETCH_POSTS_QUERY } from "../../graphql/queries";
 import SaveButton from "../SaveButton";
 
-function ListCard({ singledata, isHomePage, recallQuery }) {
+function ListCard({ singledata, isHomePage, recallQuery }){
   const history = useHistory();
   const authUser = useSelector(({ auth }) => auth.authUser);
 
   const [deletePost] = useMutation(DELETE_POST_QUERY, {
-    update: async (proxy) => {
-      await recallQuery()
-      const data = await proxy.readQuery({
-        query: FETCH_POSTS_QUERY,
-      });
-      data.getPosts = data?.getPosts.filter((p) => p.id !== singledata.id);
-      console.log(data.getPosts);
-      proxy.writeQuery({ query: FETCH_POSTS_QUERY, data });
+    update: async () => {
+      await recallQuery();
       message.success("post deleted");
-      history.push(`/${singledata.username}`);
+      history.push(`/${singledata.owner.username}`);
     },
     variables: { postId: singledata.id },
   });
   function showDeleteConfirm() {
     confirm({
-      title: "Are you sure you want to delete this post?",
+      title: "Do you want to delete this post ?",
       icon: <ExclamationCircleOutlined />,
       okText: "Yes",
       okType: "danger",
@@ -68,7 +61,7 @@ function ListCard({ singledata, isHomePage, recallQuery }) {
           />
         </div>
       </Link>
-      {!isHomePage && authUser?.username === singledata?.username && (
+      {!isHomePage && authUser?.username === singledata?.owner?.username && (
         <div
           className="gx-p-1"
           style={{ display: "flex", justifyContent: "space-between" }}

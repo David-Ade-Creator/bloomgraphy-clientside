@@ -3,16 +3,24 @@ import { useSelector } from "react-redux";
 import ChatUserList from "../../components/chat/ChatUserList";
 import CustomScrollbars from "util/CustomScrollbars";
 import "./style.less";
-import users from "./data/chatUsers";
 import Avatar from "antd/lib/avatar/avatar";
 import { Button, Drawer } from "antd";
 import IntlMessages from "util/IntlMessages";
 import CircularProgress from "components/CircularProgress/index";
 import Communication from "./Communication";
-import { useQuery, useLazyQuery, useMutation, useSubscription } from "@apollo/client";
-import { GET_CHAT_MEMBERS, GET_MESSAGES } from "../../graphql/queries";
+import {
+  useQuery,
+  useLazyQuery,
+  useMutation,
+  useSubscription,
+} from "@apollo/client";
+import {
+  GET_CHAT_MEMBERS,
+  GET_MESSAGES,
+  GET_USER_PROFILE,
+} from "../../graphql/queries";
 import { SEND_MESSAGE } from "../../graphql/mutations";
-import { NEW_MESSAGE } from "../../graphql/subscription";
+import { NEW_MESSAGE, UPDATED_CHATUSERS } from "../../graphql/subscription";
 
 // when user click on chat with another user, first add this user already fetched array of user and then fetch the conversation
 // between both users and display this on the communication phase of the application.
@@ -21,100 +29,163 @@ import { NEW_MESSAGE } from "../../graphql/subscription";
 function ChatPage(props) {
   const chatRecipient = props.match.params.username;
   const authUser = useSelector(({ auth }) => auth.authUser);
+  const [currentUser, setCurrentUser] = React.useState(undefined);
   const [loader, setLoader] = React.useState(false);
   const [drawer, setDrawer] = React.useState(false);
   const [userNotFound] = React.useState("No User Found");
-  const [selectedSectionUsername, setSelectedSectionUsername] = React.useState();
+  const [selectedSectionId, setSelectedSectionId] = React.useState();
   const [selectedUser, setSelectedUser] = React.useState(null);
   const [message, setMessage] = React.useState("");
-  const [chatUsers, setChatUsers] = React.useState(users);
+  const [chatUsers, setChatUsers] = React.useState([]);
   const [conversation, setConversation] = React.useState(null);
 
-  const { called:loadUsersCalled,loading:loadingUsers, data: chatMemberwithUsername } = useQuery(GET_CHAT_MEMBERS, {
-    variables: { chatUsername: chatRecipient },
+  const { loading: loadingUsers, data: chatMemberwithUsername } = useQuery(
+    GET_CHAT_MEMBERS,
+    {
+      onCompleted: () => {
+        setChatUsers(chatMemberwithUsername?.getChatUsers);
+        if(chatRecipient){
+        getChatRecipient();
+        }
+      },
+    }
+  );
+
+  const { data: messageData, error: messageError } = useSubscription(
+    NEW_MESSAGE
+  );
+
+  const { data: updatedUsersData, error: updatedUsersError } = useSubscription(
+    UPDATED_CHATUSERS
+  );
+
+  React.useEffect(() => {
+    if (updatedUsersError) console.log(updatedUsersError);
+    if (updatedUsersData) {
+      let refreshedUsers = updatedUsersData?.updatedChatUsers.filter(
+        (updatedUser) => updatedUser.username !== authUser.username
+      );
+      refreshedUsers = [...refreshedUsers, ...chatUsers];
+      refreshedUsers = refreshedUsers.filter(
+        (singleMember, index, self) =>
+          index === self.findIndex((m) => m.username === singleMember.username)
+      );
+      setChatUsers(refreshedUsers);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updatedUsersData, updatedUsersError]);
+
+  const [
+    getChatRecipient,
+    { data: addedUser, loading: loadingUser },
+  ] = useLazyQuery(GET_USER_PROFILE, {
+    fetchPolicy: "network-only",
+    variables: { username: chatRecipient },
+    onCompleted: () => {
+      onSelectUser(addedUser?.getProfile);
+      if (chatUsers === 0) {
+        setChatUsers([addedUser?.getProfile, ...chatUsers]);
+      } else {
+        const alreadyExist = chatUsers.find(
+          (user) => user.username === addedUser?.getProfile?.username
+        );
+        if (!alreadyExist) {
+          setChatUsers([addedUser?.getProfile, ...chatUsers]);
+        }
+      }
+    },
   });
 
-  const { data: messageData, error: messageError } = useSubscription(NEW_MESSAGE)
+  const { data: loggedinUser } = useQuery(GET_USER_PROFILE, {
+    fetchPolicy: "network-only",
+    variables: { username: authUser.username },
+    onCompleted: () => {
+      setCurrentUser(loggedinUser?.getProfile);
+    },
+  });
 
   React.useEffect(() => {
-    if (messageError) console.log(messageError)
-
-    if(messageData?.newMessage){
-    if(messageData?.newMessage.sender === selectedUser || messageData?.newMessage.receiver === authUser?.username){
-      setConversation([...conversation,messageData?.newMessage])
+    if (messageError) console.log(messageError);
+    if (messageData?.newMessage) {
+      if (
+        messageData?.newMessage.sender.id === selectedUser.id &&
+        messageData?.newMessage.receiver.id === authUser?.id
+      ) {
+        setConversation([...conversation, messageData?.newMessage]);
+      }
     }
-  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messageError, messageData?.newMessage, selectedUser]);
 
-  },[ messageError, messageData?.newMessage, selectedUser]);
+  const [loadMessages] = useLazyQuery(GET_MESSAGES, {
+    fetchPolicy: "network-only",
+    onCompleted: (data) => {
+      setConversation(data?.getMessages);
+      setLoader(false);
+    },
+  });
 
-  const [loadMessages] = useLazyQuery(
-    GET_MESSAGES,
-    {
-      fetchPolicy: "network-only",
-      onCompleted: (data) => {
-        setConversation(data?.getMessages);
-        setLoader(false)
-      },
-    }
-  );
-  const [sendUserMessage] = useMutation(
-    SEND_MESSAGE,
-    {
-      onCompleted: (data) => {
-        let message = data?.sendMessage
-        setConversation([...conversation, message])
-        setMessage("");
-      },
-    }
-  );
-
-  React.useEffect(() => {
-    if (chatRecipient && chatMemberwithUsername) {
-      setChatUsers(chatMemberwithUsername?.getChatUsers);
-    } else {
-      setChatUsers([]);
-    }
-  }, [chatMemberwithUsername, chatRecipient]);
+  const [sendUserMessage] = useMutation(SEND_MESSAGE, {
+    onCompleted: (data) => {
+      let message = data?.sendMessage;
+      setConversation([...conversation, message]);
+      setMessage("");
+    },
+  });
 
   const onSelectUser = (user) => {
     setLoader(true);
-    setSelectedSectionUsername(user.username);
+    setSelectedSectionId(user.id);
     loadMessages({ variables: { recipient: user.username } });
     setSelectedUser(user);
   };
 
-  const handleMessageChange = (e)=>{
+  const handleMessageChange = (e) => {
     e.preventDefault();
     setMessage(e.target.value);
-  }
+  };
 
-  const sendMessage = (message)=>{
-    sendUserMessage({variables:{content:message,receiver:selectedSectionUsername}})
-  }
+  const sendMessage = (message) => {
+    sendUserMessage({
+      variables: { content: message, receiverId: selectedSectionId },
+    });
+  };
 
   const ChatUsers = () => {
-    return loadUsersCalled && loadingUsers ? <CircularProgress /> : (
+    return loadingUsers && loadingUser ? (
+      <CircularProgress />
+    ) : (
       <div className="gx-chat-sidenav-main">
         <div className="gx-chat-sidenav-header">
           <div className="gx-chat-user-hd">
             <div className="gx-chat-avatar gx-mr-3">
               <div className="gx-status-pos">
-                <Avatar
-                  id="avatar-button"
-                  src={"https://via.placeholder.com/150"}
-                  className="gx-size-50"
-                  alt=""
-                />
-                <span className="gx-status gx-online" />
+                {currentUser?.photo ? (
+                  <Avatar
+                    id="avatar-button"
+                    src={currentUser?.photo}
+                    className="gx-size-50"
+                    alt=""
+                  />
+                ) : (
+                  <Avatar id="avatar-button" className="gx-size-50">
+                    {currentUser?.firstName.substring(0, 2).toUpperCase()}
+                  </Avatar>
+                )}
+                {/* <span className="gx-status gx-online" /> */}
               </div>
             </div>
 
             <div className="gx-module-user-info gx-flex-column gx-justify-content-center">
               <div className="gx-module-title">
-                <h5 className="gx-mb-0">{authUser.username}</h5>
+                <h5 className="gx-mb-0">
+                  {currentUser?.firstName + " " + currentUser?.lastName}
+                </h5>
               </div>
               <div className="gx-module-user-detail">
-                <span className="gx-text-grey gx-link">{authUser.email}</span>
+                <span className="gx-text-grey gx-link">
+                  {currentUser?.username}
+                </span>
               </div>
             </div>
           </div>
@@ -127,7 +198,7 @@ function ChatPage(props) {
             ) : (
               <ChatUserList
                 chatUsers={chatUsers}
-                selectedSectionUsername={selectedSectionUsername}
+                selectedSectionId={selectedSectionId}
                 onSelectUser={(e) => onSelectUser(e)}
               />
             )}
@@ -160,6 +231,7 @@ function ChatPage(props) {
           <Communication
             User={selectedUser}
             message={message}
+            selectedUser={selectedUser}
             sendMessage={sendMessage}
             handleMessageChange={handleMessageChange}
             conversation={conversation}

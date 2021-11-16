@@ -5,7 +5,7 @@ import CircularProgress from "components/CircularProgress";
 import ListCard from "../../components/ListCard";
 import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import UserForm from "./form";
-import { FETCH_POSTS_QUERY, GET_USER_PROFILE } from "../../graphql/queries";
+import { FETCH_POSTS_QUERY, FETCH_USER_POSTS, GET_USER_PROFILE } from "../../graphql/queries";
 import { useSelector } from "react-redux";
 
 const { TabPane } = Tabs;
@@ -43,25 +43,19 @@ function UserPage(props) {
     }
   );
 
-  const { data: postDatas } = useQuery(FETCH_POSTS_QUERY, {
+  const { data: postDatas } = useQuery(FETCH_USER_POSTS, {
     fetchPolicy: "network-only",
     variables: { username },
     onCompleted: () => {
-      const requiredPost = postDatas?.getPosts?.filter(
-        (post) => post.username === username
-      );
-      setUserPosts(requiredPost);
+      setUserPosts(postDatas?.getUserPost);
     },
   });
 
-  const [updateCallAfterDelete] = useLazyQuery(FETCH_POSTS_QUERY, {
+  const [updateCallAfterDelete, {data:refreshedData}] = useLazyQuery(FETCH_USER_POSTS, {
     fetchPolicy: "network-only",
     variables: { username },
     onCompleted: () => {
-      const requiredPost = postDatas?.getPosts?.filter(
-        (post) => post.username === username
-      );
-      setUserPosts(requiredPost);
+      setUserPosts(refreshedData?.getUserPost);
     },
   });
 

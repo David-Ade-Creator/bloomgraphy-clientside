@@ -20,7 +20,6 @@ const HomePage = (props) => {
     if (data) setPosts(data.getPosts);
   }, [data]);
 
-
   return !loading && posts !== null ? (
     <div className="homepage">
       <HeroComponent

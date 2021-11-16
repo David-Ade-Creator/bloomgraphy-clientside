@@ -1,6 +1,5 @@
 import gql from "graphql-tag";
 
-
 export const GET_USER_PROFILE = gql`
   query($username: String!) {
     getProfile(username: $username) {
@@ -12,31 +11,37 @@ export const GET_USER_PROFILE = gql`
       location
       personalWebsite
       portfolioUrl
+      username
     }
   }
 `;
 
 export const FETCH_POSTS_QUERY = gql`
-{
-  getPosts{
-   id
-  body
-  username
-  images{
-    uid
-    name
-    url
+  {
+    getPosts {
+      id
+      body
+      images {
+        uid
+        name
+        url
+      }
+      likes {
+        id
+        username
+      }
+      likeCount
+      commentCount
+      owner {
+        email
+        firstName
+        lastName
+        username
+        photo
+      }
+    }
   }
-  likes{
-    id
-    username
-  }
-  likeCount
-  commentCount
-  }
-}
 `;
-
 
 export const FETCH_USER_POSTS = gql`
   query($username: String!) {
@@ -44,8 +49,11 @@ export const FETCH_USER_POSTS = gql`
       id
       body
       createdAt
-      username
-      images
+      images {
+        uid
+        name
+        url
+      }
       comments {
         id
         username
@@ -56,28 +64,47 @@ export const FETCH_USER_POSTS = gql`
       }
       likeCount
       commentCount
+      owner {
+        email
+        firstName
+        lastName
+        username
+      }
     }
   }
 `;
 
 export const GET_CHAT_MEMBERS = gql`
-query($chatUsername: String!){
-     getChatUsers(chatUsername:$chatUsername){
-       id
-       username
-       firstName
-       lastName
-       lastmessage
-     }
-   }`;
+  query {
+    getChatUsers {
+      id
+      username
+      firstName
+      lastName
+      lastmessage
+      photo
+    }
+  }
+`;
 
 export const GET_MESSAGES = gql`
-query($recipient:String!){
-  getMessages(recipient:$recipient){
-    id
-    content
-    createdAt
-    sender
-    receiver
+  query($recipient: String!) {
+    getMessages(recipient: $recipient) {
+      id
+      content
+      createdAt
+      sender{
+        id
+        username
+        firstName
+        lastName
+      }
+      receiver{
+        id
+        username
+        firstName
+        lastName
+      }
+    }
   }
-}`;
+`;

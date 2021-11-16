@@ -1,20 +1,21 @@
 import React from "react";
 import {Avatar} from "antd";
 
-const UserCell = ({chat, selectedSectionUsername, onSelectUser}) => {
+const UserCell = ({chat, selectedSectionId, onSelectUser}) => {
   return (
-    <div className={`gx-chat-user-item ${selectedSectionUsername === chat.username ? 'active' : ''}`} onClick={() => {
+    <div className={`gx-chat-user-item ${selectedSectionId === chat.id ? 'active' : ''}`} onClick={() => {
       onSelectUser(chat);
     }}>
       <div className="gx-chat-user-row">
         <div className="gx-chat-avatar">
           <div className="gx-status-pos">
-            <Avatar src={chat.thumb} className="gx-size-40" alt={chat.username}/>
+            {chat.photo ?  <Avatar src={chat.photo} className="gx-size-40" alt={chat.username}/> :  <Avatar className="gx-size-40">{chat.firstName.substring(0,2).toUpperCase()}</Avatar>}
+           
           </div>
         </div>
 
         <div className="gx-chat-info">
-          <span className="gx-name h4">{`${chat.firstName + " " + chat.lastName} (${chat.username})`}</span>
+          <span className="gx-name h4">{`${chat.firstName + " " + chat.lastName}`}</span>
           <div className="gx-chat-info-des gx-text-truncate">{`${'This should be our lastmessage substring i think'.substring(0, 25)}...`}</div>
           {/* <div className="gx-last-message-time">{chat.lastMessageTime}</div> */}
         </div>

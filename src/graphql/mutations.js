@@ -24,7 +24,7 @@ export const CREATE_POST = gql`
         url
         name
       }
-      username
+
       type
       title
     }
@@ -61,13 +61,23 @@ export const EDIT_POST = gql`
   }
 `;
 
-
 export const SEND_MESSAGE = gql`
-mutation($content:String!,$receiver:String!){
-  sendMessage(content:$content, receiver:$receiver){
-    id
-    receiver
-    sender
-    content
+  mutation($content: String!, $receiverId: String!) {
+    sendMessage(content: $content, receiverId: $receiverId) {
+      id
+      content
+      sender{
+        id
+        username
+        firstName
+        lastName
+      }
+      receiver{
+        id
+        username
+        firstName
+        lastName
+      }
+    }
   }
-  }`;
+`;
