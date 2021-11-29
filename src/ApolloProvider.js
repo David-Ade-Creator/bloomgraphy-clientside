@@ -29,7 +29,7 @@ httpLink = authLink.concat(httpLink)
 
 const wsLink = new WebSocketLink({
   // uri: `ws://localhost:5000/graphql`,
-  uri: `ws://bloomgraphy.herokuapp.com/graphql`,
+  uri: `wss://bloomgraphy.herokuapp.com/graphql`,
   options: {
     reconnect: true,
     timeout: 80000,
