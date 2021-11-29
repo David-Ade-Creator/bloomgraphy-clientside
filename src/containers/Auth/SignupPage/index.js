@@ -14,7 +14,6 @@ function Signup(props) {
   const dispatch = useDispatch();
   const [errors, setErrors] = React.useState(undefined);
   const authUser = useSelector(({ auth }) => auth.authUser);
-  console.log(errors);
 
   React.useEffect(() => {
     if (authUser !== null) {

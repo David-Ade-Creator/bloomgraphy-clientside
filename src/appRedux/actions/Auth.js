@@ -26,7 +26,6 @@ export const userAuthUpdate = (token) => {
 
 export const userUpdate = (data) => {
   return(dispatch) =>{
-    console.log(data)
     dispatch({type: USER_DATA, payload: data})
   }
 }

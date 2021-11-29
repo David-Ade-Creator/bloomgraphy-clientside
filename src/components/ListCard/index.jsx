@@ -32,7 +32,7 @@ function ListCard({ singledata, isHomePage, recallQuery }){
         deletePost();
       },
       onCancel() {
-        console.log("Cancel");
+       
       },
     });
   }

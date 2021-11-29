@@ -19,7 +19,6 @@ const WriteBox = (props) => {
       setUserDetails(userData?.getProfile);
     }
   });
-  console.log(userDetails)
  
   const [commentText, setCommentText] = useState("");
 

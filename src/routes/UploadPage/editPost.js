@@ -19,7 +19,6 @@ function EditPage(props) {
   const [isEditing, setEditing] = React.useState(false);
   const authUser = useSelector(({ auth }) => auth.authUser);
 
-  console.log(fileList);
   React.useEffect(() => {
     if (authUser == null) {
       props.history.push("/signin");

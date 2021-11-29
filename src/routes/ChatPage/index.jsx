@@ -36,7 +36,7 @@ function ChatPage(props) {
   const [selectedSectionId, setSelectedSectionId] = React.useState();
   const [selectedUser, setSelectedUser] = React.useState(null);
   const [message, setMessage] = React.useState("");
-  const [chatUsers, setChatUsers] = React.useState([]);
+  const [chatUsers, setChatUsers] = React.useState(null);
   const [conversation, setConversation] = React.useState(null);
 
   const { loading: loadingUsers, data: chatMemberwithUsername } = useQuery(
@@ -160,7 +160,7 @@ function ChatPage(props) {
           <div className="gx-chat-user-hd">
             <div className="gx-chat-avatar gx-mr-3">
               <div className="gx-status-pos">
-                {currentUser?.photo ? (
+                {currentUser && currentUser?.photo ? (
                   <Avatar
                     id="avatar-button"
                     src={currentUser?.photo}
@@ -172,7 +172,6 @@ function ChatPage(props) {
                     {currentUser?.firstName.substring(0, 2).toUpperCase()}
                   </Avatar>
                 )}
-                {/* <span className="gx-status gx-online" /> */}
               </div>
             </div>
 
@@ -193,7 +192,15 @@ function ChatPage(props) {
 
         <div className="gx-chat-sidenav-content">
           <CustomScrollbars className="gx-chat-sidenav-scroll-tab-2">
-            {chatUsers.length === 0 ? (
+            {chatRecipient ? !loadingUser ? chatUsers.length === 0 ? (
+              <div className="gx-p-5">{userNotFound}</div>
+            ) : (
+              <ChatUserList
+                chatUsers={chatUsers}
+                selectedSectionId={selectedSectionId}
+                onSelectUser={(e) => onSelectUser(e)}
+              />
+            ) : <CircularProgress/> : chatUsers.length === 0 ? (
               <div className="gx-p-5">{userNotFound}</div>
             ) : (
               <ChatUserList
@@ -256,11 +263,11 @@ function ChatPage(props) {
                 visible={drawer}
                 onClose={() => setDrawer(!drawer)}
               >
-                {ChatUsers()}
+                {chatUsers && ChatUsers()}
               </Drawer>
             </div>
             <div className="gx-chat-sidenav gx-d-none gx-d-lg-flex">
-              {ChatUsers()}
+            {chatUsers && ChatUsers()}
             </div>
             {loader ? (
               <div className="gx-loader-view">

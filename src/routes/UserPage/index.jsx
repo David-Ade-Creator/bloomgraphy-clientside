@@ -5,7 +5,7 @@ import CircularProgress from "components/CircularProgress";
 import ListCard from "../../components/ListCard";
 import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import UserForm from "./form";
-import { FETCH_POSTS_QUERY, FETCH_USER_POSTS, GET_USER_PROFILE } from "../../graphql/queries";
+import { FETCH_USER_POSTS, GET_USER_PROFILE } from "../../graphql/queries";
 import { useSelector } from "react-redux";
 
 const { TabPane } = Tabs;

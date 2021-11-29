@@ -8,12 +8,12 @@ import {
   split,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { WebSocketLink } from '@apollo/client/link/ws'
+import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 
 let httpLink = createHttpLink({
-  // uri: "https://bloomgraphy.herokuapp.com",
-  uri: "http://localhost:5000",
+  uri: "https://bloomgraphy.herokuapp.com",
+  // uri: "http://localhost:5000",
 });
 
 const authLink = setContext(() => {
@@ -28,10 +28,11 @@ const authLink = setContext(() => {
 httpLink = authLink.concat(httpLink)
 
 const wsLink = new WebSocketLink({
-  uri: `ws://localhost:5000/graphql`,
-  // uri: `ws://https://bloomgraphy.herokuapp.com`,
+  // uri: `ws://localhost:5000/graphql`,
+  uri: `ws://bloomgraphy.herokuapp.com/graphql`,
   options: {
     reconnect: true,
+    timeout: 80000,
     connectionParams: {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
