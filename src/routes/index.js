@@ -4,7 +4,6 @@ import ChatPage from "./ChatPage";
 import HomePage from "./HomePage";
 import DetailsPage from "./DetailsPage";
 import UploadPage from "./UploadPage";
-import SavedShotPage from "./SavedShotPage";
 import UserPage from "./UserPage";
 import EditPage from "./UploadPage/editPost";
 
@@ -16,7 +15,6 @@ const App = ({match}) => (
       <Route path={`${match.url}shot/:id`} component={DetailsPage} exact/>
       <Route path={`${match.url}upload`} component={UploadPage} exact/>
       <Route path={`${match.url}editpost/:postId`} component={EditPage} exact/>
-      <Route path={`${match.url}saved`} component={SavedShotPage} exact/>
       <Route path={`${match.url}:username`} component={UserPage} exact/>
       
     </Switch>

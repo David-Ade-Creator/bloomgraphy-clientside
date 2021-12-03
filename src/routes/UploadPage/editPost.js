@@ -3,15 +3,14 @@ import React from "react";
 import { gql, useMutation, useQuery } from "@apollo/react-hooks";
 import ImgCrop from "antd-img-crop";
 import { Row, Col, Form, Input, Select, Button, message, Upload } from "antd";
-import { useHistory, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import CircularProgress from "components/CircularProgress";
-import { CREATE_POST, EDIT_POST } from "../../graphql/mutations";
+import { EDIT_POST } from "../../graphql/mutations";
 import { useSelector } from "react-redux";
 
 const { Option } = Select;
 
 function EditPage(props) {
-  const history = useHistory();
   const location = useLocation();
   const currentUrl = location.pathname;
   const [postId, setPostId] = React.useState(props.match?.params?.postId);
@@ -46,13 +45,6 @@ function EditPage(props) {
   React.useEffect(() => {
     currentUrl.includes("editpost") ? setEditing(true) : setEditing(false);
   }, [currentUrl, isEditing]);
-
-  const [addPost, { loading: addPostLoading }] = useMutation(CREATE_POST, {
-    onCompleted: () => {
-      message.success("New Post added");
-      history.push("/home");
-    },
-  });
 
   const [editPost, { loading: editPostLoading }] = useMutation(EDIT_POST, {
     onCompleted: () => {
@@ -90,8 +82,6 @@ function EditPage(props) {
     });
     if (isEditing) {
       editPost({ variables: { id: postId, ...values, images } });
-    } else {
-      addPost({ variables: { ...values, images } });
     }
   };
 
@@ -160,13 +150,9 @@ function EditPage(props) {
               type="primary"
               style={{ width: "100%" }}
               htmlType="submit"
-              loading={addPostLoading || editPostLoading}
+              loading={editPostLoading}
             >
-              {isEditing && !addPostLoading
-                ? "Update Post"
-                : "Publish to Bloom"}
-              {addPostLoading && "Posting..."}
-              {editPostLoading && "Updating post..."}
+              {editPostLoading ? "Updating post..." : "Update Post"}
             </Button>
           </Form.Item>
         </Form>

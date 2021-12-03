@@ -12,7 +12,7 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 
 let httpLink = createHttpLink({
-  uri: "https://bloomgraphy.herokuapp.com",
+  uri: "https://bloomgraphy.herokuapp.com/graphql",
   // uri: "http://localhost:5000",
 });
 

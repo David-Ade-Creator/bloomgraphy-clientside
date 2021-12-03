@@ -9,12 +9,12 @@ import { useSelector } from "react-redux";
 import { FETCH_POSTS_QUERY } from "../../graphql/queries";
 import CircularProgress from "components/CircularProgress";
 
-const HomePage = (props) => {
+const HomePage = () => {
   const [posts, setPosts] = React.useState(null);
 
   const authUser = useSelector(({ auth }) => auth.authUser);
 
-  const { data, loading } = useQuery(FETCH_POSTS_QUERY,{fetchPolicy: "network-only"});
+  const { data, loading } = useQuery(FETCH_POSTS_QUERY);
 
   React.useEffect(() => {
     if (data) setPosts(data.getPosts);
