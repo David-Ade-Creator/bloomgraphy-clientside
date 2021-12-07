@@ -5,8 +5,9 @@ import ImgCrop from "antd-img-crop";
 import { Row, Col, Form, Input, Select, Button, message, Upload } from "antd";
 import { useHistory } from "react-router";
 import CircularProgress from "components/CircularProgress";
-import { CREATE_POST } from "../../graphql/mutations";
+import { CREATE_POST } from "graphql/mutations";
 import { useSelector } from "react-redux";
+import { FETCH_POSTS_QUERY } from "graphql/queries";
 
 const { Option } = Select;
 
@@ -19,7 +20,7 @@ function UploadPage(props) {
     if (authUser == null) {
       props.history.push("/signin");
     }
-  },[])
+  }, [])
 
 
   const [form] = Form.useForm();
@@ -30,6 +31,9 @@ function UploadPage(props) {
       message.success("New Post added");
       history.push("/");
     },
+    refetchQueries: [
+      { query: FETCH_POSTS_QUERY}
+    ]
   });
 
 
@@ -48,7 +52,7 @@ function UploadPage(props) {
     imgWindow.document.write(image.outerHTML);
   };
 
-  const onChange = ({ file, fileList: newFileList }) => {
+  const onChange = ({ _, fileList: newFileList }) => {
     setFileList(newFileList);
   };
 
@@ -61,8 +65,8 @@ function UploadPage(props) {
       singleImage.name = file.name;
       images = [...images, singleImage];
     });
-   
-      addPost({ variables: { ...values, images } });
+
+    addPost({ variables: { ...values, images } });
 
   };
 
@@ -75,7 +79,6 @@ function UploadPage(props) {
           <Upload
             action="https://queaserver.herokuapp.com/api/q3/upload/s3"
             listType="picture-card"
-            // showUploadList={true}
             fileList={fileList}
             onChange={onChange}
             onPreview={onPreview}

@@ -43,6 +43,39 @@ export const FETCH_POSTS_QUERY = gql`
   }
 `;
 
+export const FETCH_POST_QUERY = gql`
+  query($postId: ID!) {
+    getPost(postId: $postId) {
+      id
+      body
+      images {
+        uid
+        name
+        url
+      }
+      createdAt
+      likeCount
+      likes {
+        username
+      }
+      commentCount
+      comments {
+        id
+        username
+        createdAt
+        body
+      }
+      owner {
+        email
+        firstName
+        lastName
+        username
+        photo
+      }
+    }
+  }
+`;
+
 export const FETCH_USER_POSTS = gql`
   query($username: String!) {
     getUserPost(username: $username) {

@@ -129,7 +129,7 @@ function UserForm(props) {
           </Col>
           <Col lg={24} md={24} sm={24} xs={24} className="gx-mb-2">
             <FormItem name="bio">
-              <Input.TextArea placeholder="Biography" />
+              <Input.TextArea placeholder="Biography" rows="4" />
             </FormItem>
           </Col>
           <Col lg={24} md={24} sm={24} xs={24} className="gx-mb-2">

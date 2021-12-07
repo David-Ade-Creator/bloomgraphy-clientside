@@ -2,15 +2,15 @@
 import React from "react";
 import { Alert, Avatar, Button, Card, Carousel, Col, Row } from "antd";
 import { Link } from "react-router-dom";
-import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
 import PostList from "components/wall/PostList";
 import "./style.less";
-import LikeButton from "../../components/Likebutton";
+import LikeButton from "components/Likebutton";
 import { useSelector } from "react-redux";
 import CircularProgress from "components/CircularProgress";
 import CustomScrollbars from "util/CustomScrollbars";
 import Modal from "antd/lib/modal/Modal";
+import { FETCH_POST_QUERY } from "graphql/queries";
 
 function DetailsPage(props) {
   const postId = props.match.params.id;
@@ -52,7 +52,7 @@ function DetailsPage(props) {
           type="warning"
           message="Make sure to contact photographer before booking a time"
         />
-        <Button type="primary">Select and Book and appointment with me</Button>
+        <Button type="primary" disabled={true}>Select and Book and appointment with me</Button>
         <Link to={`/chat/${post.owner.username}`}>
           <Button type="primary">
             Let's have a conversation about your service
@@ -104,14 +104,18 @@ function DetailsPage(props) {
               </span>
             </Col>
             <Col lg={12} style={{ textAlign: "right" }}>
+            {authUser.username !== post.owner.username && (
               <span>
+              <Link to={`/chat/${post.owner.username}`}>
                 <Button
                   type="link"
                   className="gx-fs-md gx-pointer gx-mr-3 gx-text-black gx-p-0"
                 >
                   Leave a Message
                 </Button>
+                </Link>
               </span>
+            )}
               <span>
                 <LikeButton post={post} user={authUser} />
               </span>
@@ -145,38 +149,5 @@ function DetailsPage(props) {
     <CircularProgress />
   );
 }
-
-const FETCH_POST_QUERY = gql`
-  query($postId: ID!) {
-    getPost(postId: $postId) {
-      id
-      body
-      images {
-        uid
-        name
-        url
-      }
-      createdAt
-      likeCount
-      likes {
-        username
-      }
-      commentCount
-      comments {
-        id
-        username
-        createdAt
-        body
-      }
-      owner {
-        email
-        firstName
-        lastName
-        username
-        photo
-      }
-    }
-  }
-`;
 
 export default DetailsPage;
