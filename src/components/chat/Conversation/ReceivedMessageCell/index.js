@@ -1,4 +1,5 @@
 import React from "react";
+import Moment from 'react-moment';
 
 const ReceivedMessageCell = ({ conversation, user }) => {
   return (
@@ -10,7 +11,7 @@ const ReceivedMessageCell = ({ conversation, user }) => {
           className="gx-time gx-text-muted gx-text-left gx-mt-2"
           style={{ fontSize: "0.7rem" }}
         >
-          2min ago
+         <Moment fromNow>{conversation.createdAt}</Moment>
         </div>
         </div>
         

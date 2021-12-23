@@ -39,6 +39,8 @@ function ChatPage(props) {
   const [chatUsers, setChatUsers] = React.useState(null);
   const [conversation, setConversation] = React.useState(null);
 
+  console.log(conversation);
+
   const { loading: loadingUsers, data: chatMemberwithUsername } = useQuery(
     GET_CHAT_MEMBERS,
     {

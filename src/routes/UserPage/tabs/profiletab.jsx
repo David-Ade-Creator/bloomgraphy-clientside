@@ -32,7 +32,7 @@ import { UPDATE_USER_PROFILE } from "graphql/mutations";
 
      return (
         <Row
-        className="gx-p-3"
+        className="gx-p-0"
         style={{
           minHeight: "66.5vh",
           display: "flex",
@@ -44,8 +44,8 @@ import { UPDATE_USER_PROFILE } from "graphql/mutations";
             <Col
               lg={20}
               md={20}
-              sm={20}
-              xs={20}
+              sm={24}
+              xs={24}
               style={{ textAlign: "center" }}
               className="gx-mb-4"
             >
@@ -63,8 +63,8 @@ import { UPDATE_USER_PROFILE } from "graphql/mutations";
             <Col
               llg={20}
               md={20}
-              sm={20}
-              xs={20}
+              sm={24}
+              xs={24}
               style={{ textAlign: "center" }}
               className="gx-mb-4"
             >
@@ -73,15 +73,15 @@ import { UPDATE_USER_PROFILE } from "graphql/mutations";
             <Col
               lg={20}
               md={20}
-              sm={20}
-              xs={20}
+              sm={24}
+              xs={24}
               style={{ textAlign: "center" }}
               className="gx-mb-3"
             >
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "space-between",
+                  justifyContent: "center",
                   alignItems: "center",
                   width: "100%",
                 }}
@@ -90,6 +90,24 @@ import { UPDATE_USER_PROFILE } from "graphql/mutations";
                   {userPosts?.length}{" "}
                   {userPosts?.length > 1 ? "Shots" : "Shot"} uploaded
                 </span>
+              </div>
+            </Col>
+            <Col
+              lg={20}
+              md={20}
+              sm={24}
+              xs={24}
+              style={{ textAlign: "center" }}
+              className="gx-mb-3"
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
                 <Space> 
                 {authUser.username === username && (
                   <Button type="primary" onClick={toggleEdit}>
