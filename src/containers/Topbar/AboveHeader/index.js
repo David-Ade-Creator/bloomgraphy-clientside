@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout } from "antd";
+import { Layout, Tag } from "antd";
 import "./style.less";
 import UserInfo from "components/UserInfo";
 import { Link } from "react-router-dom";
@@ -33,9 +33,16 @@ const AboveHeader = () => {
             <ul className="gx-header-notifications gx-ml-auto">
              
               {authUser !== null ? (
-                <li className="gx-user-nav gx-mt-2 gx-pt-1">
-                  <UserInfo />
+                <>
+                <li className="gx-user-nav gx-mt-2 gx-mr-1 gx-pt-1">
+                <Link to="/upload">
+                <Tag className="gx-ml-2" color="orange">+</Tag>
+                    </Link>
                 </li>
+                <li className="gx-user-nav gx-mt-2 gx-pt-1">
+                <UserInfo />
+              </li>
+              </>
               ) : (
                 <>
                   <li

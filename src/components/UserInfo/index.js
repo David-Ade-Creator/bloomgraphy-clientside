@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Popover, Tag } from "antd";
+import { Popover } from "antd";
 import { userSignOut } from "appRedux/actions/Auth";
 import { Link } from "react-router-dom";
 import { useQuery } from "@apollo/client";
@@ -36,7 +36,7 @@ const UserInfo = () => {
       content={userMenuOptions}
       trigger="click"
     >
-      {user ? <h5 style={{color:"white",cursor:"pointer"}}>{"Hello " + authUser.username}<Tag className="gx-ml-2" color="orange">?</Tag></h5>: ""}
+      {user ? <h5 style={{color:"white",cursor:"pointer"}}>{authUser.username}</h5>: ""}
     </Popover>
   );
 };
