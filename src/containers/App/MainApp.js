@@ -6,7 +6,7 @@ import { useRouteMatch } from "react-router-dom";
 
 const { Content } = Layout;
 
-const MainApp = () => {
+const MainApp = ({isAuthenticated}) => {
   const match = useRouteMatch();
 
   return (
@@ -14,8 +14,7 @@ const MainApp = () => {
       <AboveHeader />
       <Layout>
         <Content className="gx-layout-content">
-          {/* this is coming from the index page in routes folder, used to identify present route url and navigate to route */}
-          <App match={match} />
+          <App match={match} isAuthenticated={isAuthenticated} />
         </Content>
       </Layout>
     </Layout>

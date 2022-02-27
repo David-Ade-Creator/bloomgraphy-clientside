@@ -7,18 +7,11 @@ import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import IntlMessages from "util/IntlMessages";
 import "./style.less";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { userAuthUpdate } from "../../../appRedux/actions/Auth";
 
-function Signin(props) {
+function Signin() {
   const dispatch = useDispatch();
-  const authUser = useSelector(({ auth }) => auth.authUser);
-
-  React.useEffect(() => {
-    if (authUser !== null) {
-      props.history.push("/");
-    }
-  }, [authUser]);
 
   const [errors, setErrors] = React.useState(undefined);
   const [signInUser, { loading }] = useMutation(SIGNIN_USER, {

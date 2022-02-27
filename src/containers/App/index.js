@@ -1,11 +1,6 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Route,
-  Switch,
-  useLocation,
-  useRouteMatch,
-} from "react-router-dom";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { ConfigProvider } from "antd";
 import { IntlProvider } from "react-intl";
 
@@ -13,50 +8,55 @@ import AppLocale from "lngProvider";
 import MainApp from "./MainApp";
 import SignIn from "../Auth/SigninPage";
 import SignUp from "../Auth/SignupPage";
-import CircularProgress from "../../components/CircularProgress";
 import { getUser } from "../../appRedux/actions";
-
-const RestrictedRoute = ({
-  component: Component,
-  location,
-  authUser,
-  ...rest
-}) => <Route {...rest} render={(props) => <Component {...props} />} />;
+import { UnRestrictedRoute } from "../../util/authenticate";
 
 const App = () => {
   const dispatch = useDispatch();
-  const { locale } = useSelector(
-    ({ settings }) => settings
-  );
-  const { token, loadingAuthUser, authUser } = useSelector(
-    ({ auth }) => auth
-  );
+  const [isAuthenticated, setUserAuthentication] = useState(false);
 
-  const location = useLocation();
+  const { locale } = useSelector(({ settings }) => settings);
+  const { token, loadingAuthUser, authUser } = useSelector(({ auth }) => auth);
   const match = useRouteMatch();
 
   useEffect(() => {
     dispatch(getUser(token));
-  }, [dispatch, token]);
+  }, [authUser, dispatch, token]);
+
+  useEffect(() => {
+    authUser ? setUserAuthentication(true) : setUserAuthentication(false);
+  }, [authUser]);
 
   const currentAppLocale = AppLocale[locale.locale];
 
-  return loadingAuthUser ? (
-    <CircularProgress />
-  ) : (
+  return (
     <ConfigProvider locale={currentAppLocale.antd}>
       <IntlProvider
         locale={currentAppLocale.locale}
         messages={currentAppLocale.messages}
       >
         <Switch>
-          <Route exact path="/signin" component={SignIn} />
-          <Route exact path="/signup" component={SignUp} />
-          <RestrictedRoute
+          <UnRestrictedRoute
+            path="/signin"
+            isAuthenticated={isAuthenticated}
+            component={SignIn}
+            exact
+          />
+          <UnRestrictedRoute
+            path="/signup"
+            isAuthenticated={isAuthenticated}
+            component={SignUp}
+            exact
+          />
+          <Route
             path={`${match.url}`}
-            authUser={authUser}
-            location={location}
-            component={MainApp}
+            render={(props) => (
+              <MainApp
+                isAuthenticated={isAuthenticated}
+                loadingAuthUser={loadingAuthUser}
+                {...props}
+              />
+            )}
           />
         </Switch>
       </IntlProvider>
