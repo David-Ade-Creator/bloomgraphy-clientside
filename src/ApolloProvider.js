@@ -12,7 +12,7 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 
 let httpLink = createHttpLink({
-  uri: "https://bloomgraphy.herokuapp.com/graphql",
+  uri: "https://bloomgraphy-server.onrender.com/graphql",
   // uri: "http://localhost:5000",
 });
 
@@ -29,7 +29,7 @@ httpLink = authLink.concat(httpLink)
 
 const wsLink = new WebSocketLink({
   // uri: `ws://localhost:5000/graphql`,
-  uri: `wss://bloomgraphy.herokuapp.com/graphql`,
+  uri: `wss://bloomgraphy-server.onrender.com/graphql`,
   options: {
     reconnect: true,
     timeout: 80000,
